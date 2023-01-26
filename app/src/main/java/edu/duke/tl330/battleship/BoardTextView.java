@@ -50,19 +50,23 @@ public class BoardTextView {
   
   public String displayMyOwnBoard() {
     StringBuilder ans = new StringBuilder("");
-    StringBuilder row = new StringBuilder("");
-    String sep="";
-    for (int i = 0; i < toDisplay.getWidth(); i++) {
-       row.append(sep);
-       row.append("  ");
-       sep = "|";
-    }
     ans.append(makeHeader());
-    for (int i = 0; i < toDisplay.getHeight(); i++){
-      char letter=(char) (i+65);
-      ans.append(letter);
-      ans.append(row);
-      ans.append(letter+"\n");
+    for (int j = 0; j < toDisplay.getHeight(); j++){
+      char letter=(char) (j+65);
+      ans.append(letter+" ");
+      StringBuilder line=new StringBuilder("");
+      String sep="";
+      for (int i = 0; i < toDisplay.getWidth(); i++) {
+        line.append(sep);
+        Character c=toDisplay.whatIsAt(new Coordinate(i,j));
+        if(c!=null){
+          line.append(c);
+        }
+        else{
+          line.append(" ");}
+        sep = "|";
+      }
+      ans.append(line+" "+letter+"\n");
     }
     ans.append(makeHeader());
     return ans.toString(); //this is a placeholder for the moment

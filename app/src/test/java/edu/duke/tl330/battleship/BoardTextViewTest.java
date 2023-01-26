@@ -28,8 +28,8 @@ public class BoardTextViewTest {
     String expectedHeader= "  0|1|2\n";
     String expected=
       expectedHeader+
-      "A  |  |  A\n"+
-      "B  |  |  B\n"+
+      "A  | |  A\n"+
+      "B  | |  B\n"+
       expectedHeader;
     emptyBoardHelper(3, 2, expectedHeader, expected);
   }
@@ -39,11 +39,11 @@ public class BoardTextViewTest {
     String expectedHeader= "  0|1|2\n";
     String expected=
       expectedHeader+
-      "A  |  |  A\n"+
-      "B  |  |  B\n"+
-      "C  |  |  C\n"+
-      "D  |  |  D\n"+
-      "E  |  |  E\n"+
+      "A  | |  A\n"+
+      "B  | |  B\n"+
+      "C  | |  C\n"+
+      "D  | |  D\n"+
+      "E  | |  E\n"+
       expectedHeader;
     emptyBoardHelper(3, 5, expectedHeader, expected);
   }
@@ -55,4 +55,24 @@ public class BoardTextViewTest {
     assertThrows(IllegalArgumentException.class, () -> new BoardTextView(tallBoard));
   }
 
+  private void BoardHelper(BattleShipBoard<Character> b, String expected){
+    BoardTextView view = new BoardTextView(b);
+    assertEquals(view.displayMyOwnBoard(),expected);
+  } 
+  @Test
+  public void test_display_my_board_3by4(){
+    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3,4);
+    b1.tryAddShip(new BasicShip(new Coordinate(0, 1)));
+    b1.tryAddShip(new BasicShip(new Coordinate(2, 3)));
+    b1.tryAddShip(new BasicShip(new Coordinate(2, 2)));
+    String expectedHeader= "  0|1|2\n";
+    String expected=
+      expectedHeader+
+      "A  | |  A\n"+
+      "B s| |  B\n"+
+      "C  | |s C\n"+
+      "D  | |s D\n"+
+      expectedHeader;
+     BoardHelper(b1, expected);
+     }
 }
