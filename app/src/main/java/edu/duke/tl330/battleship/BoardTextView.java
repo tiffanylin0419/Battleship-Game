@@ -51,12 +51,12 @@ public class BoardTextView {
   public String displayMyOwnBoard() {
     StringBuilder ans = new StringBuilder("");
     ans.append(makeHeader());
-    for (int j = 0; j < toDisplay.getHeight(); j++){
-      char letter=(char) (j+65);
+    for (int i = 0; i < toDisplay.getHeight(); i++){
+      char letter=(char) (i+65);
       ans.append(letter+" ");
       StringBuilder line=new StringBuilder("");
       String sep="";
-      for (int i = 0; i < toDisplay.getWidth(); i++) {
+      for (int j = 0; j < toDisplay.getWidth(); j++) {
         line.append(sep);
         Character c=toDisplay.whatIsAt(new Coordinate(i,j));
         if(c!=null){

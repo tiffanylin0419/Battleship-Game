@@ -3,12 +3,51 @@
  */
 package edu.duke.tl330.battleship;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
+public class App {
+
+  final Board<Character> theBoard;
+  final BoardTextView view;
+  final BufferedReader inputReader;
+  final PrintStream out;
+
+  public App(Board<Character> theBoard, Reader inputSource, PrintStream out) {
+    this.theBoard = theBoard;
+    this.view = new BoardTextView(theBoard);
+    this.inputReader = new BufferedReader(inputSource);
+    this.out = out;// System.out;
+  }
+
+  public Placement readPlacement(String prompt) throws IOException {
+    // out.println(prompt);
+    out.println(prompt);
+    String s = inputReader.readLine();
+    return new Placement(s);
+  }
+
+  public void doOnePlacement() throws IOException {
+    // StringReader sr = new StringReader("B2V\nC8H\na4v\n");
+    // ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    // PrintStream ps = new PrintStream(bytes, true);
+    // Board<Character> b = new BattleShipBoard<Character>(10, 20);
+    // App app = new App(b, sr, ps);
+    Placement p = readPlacement("Where would you like to put your ship?");
+    BasicShip s = new BasicShip(p.getWhere());
+    theBoard.tryAddShip(s);
+    out.println(view.displayMyOwnBoard());
+  }
+
+  public static void main(String[] args) throws IOException{
+    Board<Character> b = new BattleShipBoard<Character>(10, 20);
+    App a=new App(b,new InputStreamReader(System.in),System.out);
+    a.doOnePlacement();
+    
+  }
 }

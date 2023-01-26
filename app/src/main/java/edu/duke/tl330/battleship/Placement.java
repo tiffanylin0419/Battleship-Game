@@ -4,7 +4,7 @@ public class Placement {
   private final Coordinate where;
   private final char orientation;
 
-  public Object getWhere() {
+  public Coordinate getWhere() {
     return where;
   }
 

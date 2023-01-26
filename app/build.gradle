@@ -45,3 +45,8 @@ test{
     }
 
 }
+
+
+run{
+    standardInput = System.in
+}
