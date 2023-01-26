@@ -1,11 +1,14 @@
 package edu.duke.tl330.battleship;
 
+import java.util.ArrayList;
+
 /**
  * This class implements a board for battleship game.
  */
-public class BattleShipBoard implements Board{
+public class BattleShipBoard<T> implements Board<T>{
   private final int width;
   private final int height;
+  private final ArrayList<Ship<T>> myShips;
 
   
   public int getWidth(){
@@ -31,5 +34,25 @@ public class BattleShipBoard implements Board{
     }
     this.width=w;
     this.height=h;
+    this.myShips=new ArrayList<Ship<T>>();
+  }
+
+  public boolean tryAddShip(Ship<T> toAdd){
+    myShips.add(toAdd);
+    return true;
+  }
+  /**
+    @param takes a Coordinate,
+    sees which (if any) Shipvoccupies that coordinate.
+    If one is found, we return whatever displayInfo it has at those coordinates (for now, just 's').
+    If none is found, we return null.
+   */
+  public T whatIsAt(Coordinate where) {
+    for (Ship<T> s: myShips) {
+      if (s.occupiesCoordinates(where)){
+        return s.getDisplayInfoAt(where);
+      }
+    }
+    return null;
   }
 }
