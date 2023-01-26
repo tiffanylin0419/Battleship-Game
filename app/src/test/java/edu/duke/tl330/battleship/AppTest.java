@@ -4,13 +4,18 @@
 package edu.duke.tl330.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
 
 class AppTest {
   @Test
@@ -35,32 +40,54 @@ class AppTest {
     }
 
   }
+
   @Test
-  void test_do_one_placement()throws IOException{
+  void test_do_one_placement() throws IOException {
     StringReader sr = new StringReader("B2V\n");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream ps = new PrintStream(bytes, true);
     Board<Character> b = new BattleShipBoard<Character>(10, 10);
     App app = new App(b, sr, ps);
     app.doOnePlacement();
-    String expectedHeader= "  0|1|2|3|4|5|6|7|8|9\n";
-    String expected=
-      expectedHeader+
-      "A  | | | | | | | | |  A\n"+
-      "B  | |s| | | | | | |  B\n"+
-      "C  | | | | | | | | |  C\n"+
-      "D  | | | | | | | | |  D\n"+
-      "E  | | | | | | | | |  E\n"+
-      "F  | | | | | | | | |  F\n"+
-      "G  | | | | | | | | |  G\n"+
-      "H  | | | | | | | | |  H\n"+
-      "I  | | | | | | | | |  I\n"+
-      "J  | | | | | | | | |  J\n"+
-      expectedHeader;
-    
-    
-    assertEquals("Where would you like to put your ship?\n"+expected+"\n", bytes.toString());
-    
-    
+    String expectedHeader = "  0|1|2|3|4|5|6|7|8|9\n";
+    String expected = expectedHeader +
+        "A  | | | | | | | | |  A\n" +
+        "B  | |s| | | | | | |  B\n" +
+        "C  | | | | | | | | |  C\n" +
+        "D  | | | | | | | | |  D\n" +
+        "E  | | | | | | | | |  E\n" +
+        "F  | | | | | | | | |  F\n" +
+        "G  | | | | | | | | |  G\n" +
+        "H  | | | | | | | | |  H\n" +
+        "I  | | | | | | | | |  I\n" +
+        "J  | | | | | | | | |  J\n" +
+        expectedHeader;
+
+    assertEquals("Where would you like to put your ship?\n" + expected + "\n", bytes.toString());
+
+  }
+
+  @Test
+  @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
+  public void test_main() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes, true);
+    InputStream input = getClass().getClassLoader().getResourceAsStream("input.txt");
+    assertNotNull(input);
+    InputStream expectedStream = getClass().getClassLoader().getResourceAsStream("output.txt");
+    assertNotNull(expectedStream);
+    InputStream oldIn = System.in;
+    PrintStream oldOut = System.out;
+    try {
+      System.setIn(input);
+      System.setOut(out);
+      App.main(new String[0]);
+    } finally {
+      System.setIn(oldIn);
+      System.setOut(oldOut);
     }
+    String expected = new String(expectedStream.readAllBytes());
+    String actual = bytes.toString();
+    assertEquals(expected, actual);
+  }
 }
