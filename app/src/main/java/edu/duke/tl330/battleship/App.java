@@ -33,13 +33,8 @@ public class App {
   }
 
   public void doOnePlacement() throws IOException {
-    // StringReader sr = new StringReader("B2V\nC8H\na4v\n");
-    // ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    // PrintStream ps = new PrintStream(bytes, true);
-    // Board<Character> b = new BattleShipBoard<Character>(10, 20);
-    // App app = new App(b, sr, ps);
     Placement p = readPlacement("Where would you like to put your ship?");
-    BasicShip s = new BasicShip(p.getWhere());
+    RectangleShip<Character> s = new RectangleShip<Character>(p.getWhere(), 's', '*');
     theBoard.tryAddShip(s);
     out.println(view.displayMyOwnBoard());
   }

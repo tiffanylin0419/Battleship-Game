@@ -33,11 +33,11 @@ public class BattleShipBoardTest {
     BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3, 3);
     Character[][] arr = { { null, null, null }, { null, null, null }, { null, null, null } };
     checkWhatIsAtBoard(b1, arr);
-    Ship<Character> s1 = new BasicShip(new Coordinate(0, 1));
+    Ship<Character> s1 = new RectangleShip<Character>(new Coordinate(0, 1), 's', '*');
     b1.tryAddShip(s1);
     arr[0][1]='s';
     checkWhatIsAtBoard(b1, arr);
-    Ship<Character> s2 = new BasicShip(new Coordinate(2, 2));
+    Ship<Character> s2 = new RectangleShip<Character>(new Coordinate(2, 2), 's', '*');
     b1.tryAddShip(s2);
     arr[2][2]='s';
     checkWhatIsAtBoard(b1, arr);

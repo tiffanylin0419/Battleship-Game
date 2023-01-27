@@ -26,8 +26,10 @@ void recordHitAt(Coordinate where)
 boolean wasHitAt(Coordinate where);
 T getDisplayInfoAt(Coordinate where)
 
-class BasicShip  implements Ship<Character>
-final Coordinate myLocation
+?
+abstract class BasicShip  implements Ship<Character>
+Constructor: (Coordinate)(Iterable<Coordinate> )
+final HashMap<Coordinate, Boolean>  myPieces
 //override function
 
 

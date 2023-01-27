@@ -62,9 +62,9 @@ public class BoardTextViewTest {
   @Test
   public void test_display_my_board_3by4(){
     BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3,4);
-    b1.tryAddShip(new BasicShip(new Coordinate("B0")));
-    b1.tryAddShip(new BasicShip(new Coordinate(2, 2)));
-    b1.tryAddShip(new BasicShip(new Coordinate(3, 2)));
+    b1.tryAddShip(new RectangleShip<Character>(new Coordinate("B0"), 's', '*'));
+    b1.tryAddShip(new RectangleShip<Character>(new Coordinate(2, 2), 's', '*'));
+    b1.tryAddShip(new RectangleShip<Character>(new Coordinate(3, 2), 's', '*'));
     String expectedHeader= "  0|1|2\n";
     String expected=
       expectedHeader+
