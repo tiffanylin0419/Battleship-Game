@@ -12,9 +12,15 @@ public abstract class BasicShip<T> implements Ship<T> {
   // constructor with Iterable<Coordinate>
   public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
     this.myPieces = new HashMap<Coordinate, Boolean>();
-    this.myDisplayInfo=myDisplayInfo;
+    this.myDisplayInfo = myDisplayInfo;
     for (Coordinate c : where) {
       this.myPieces.put(c, false);
+    }
+  }
+
+  protected void checkCoordinateInThisShip(Coordinate c) {
+    if (myPieces.get(c) == null) {
+      throw new IllegalArgumentException("Coordinate " + c + " not in ship.");
     }
   }
 
@@ -28,27 +34,31 @@ public abstract class BasicShip<T> implements Ship<T> {
 
   @Override
   public boolean isSunk() {
-    // TODO Auto-generated method stub
+    for (boolean value : myPieces.values()) {
+      if (value) {
+        return true;
+      }
+    }
     return false;
   }
 
   @Override
   public void recordHitAt(Coordinate where) {
-    // TODO Auto-generated method stub
-
+    checkCoordinateInThisShip(where);
+    myPieces.put(where, true);
   }
 
   @Override
   public boolean wasHitAt(Coordinate where) {
-    // TODO Auto-generated method stub
-    return false;
+    checkCoordinateInThisShip(where);
+    return myPieces.get(where) == true;
   }
 
   @Override
   public T getDisplayInfoAt(Coordinate where) {
-    //TODO this is not right.  We need to
-    //look up the hit status of this coordinate
-    return myDisplayInfo.getInfo(where, false);
+    checkCoordinateInThisShip(where);
+    boolean hit = wasHitAt(where);
+    return myDisplayInfo.getInfo(where, hit);
   }
 
 }
