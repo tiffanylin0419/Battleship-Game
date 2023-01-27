@@ -15,8 +15,8 @@ public class RectangleShipTest {
     Coordinate c = new Coordinate(1, 2);
     HashSet<Coordinate> cc = new HashSet<Coordinate>();
     cc.add(new Coordinate(1, 2));
-    cc.add(new Coordinate(2, 2));
-    cc.add(new Coordinate(3, 2));
+    cc.add(new Coordinate(1, 3));
+    cc.add(new Coordinate(1, 4));
     assertEquals(cc, RectangleShip.makeCoords(c, 3, 1));
   }
 
@@ -25,52 +25,60 @@ public class RectangleShipTest {
     Coordinate c = new Coordinate(2, 3);
     HashSet<Coordinate> cc = new HashSet<Coordinate>();
     cc.add(new Coordinate(2, 3));
-    cc.add(new Coordinate(2, 4));
-    cc.add(new Coordinate(2, 5));
-    cc.add(new Coordinate(2, 6));
+    cc.add(new Coordinate(3, 3));
+    cc.add(new Coordinate(4, 3));
+    cc.add(new Coordinate(5, 3));
     assertEquals(cc, RectangleShip.makeCoords(c, 1, 4));
   }
 
   @Test
+  public void test_getName(){
+    RectangleShip<Character> rs1=new  RectangleShip<Character>(new Coordinate(2, 0),'s','*');
+    assertEquals(rs1.getName(),"testship");
+    RectangleShip<Character> rs2 = new RectangleShip<Character>("submarine",new Coordinate(2, 0), 1,4, 's', '*');
+    assertEquals(rs2.getName(),"submarine");
+  }
+
+  @Test
   public void test_constructor() {
-    RectangleShip<Character> rs = new RectangleShip<Character>(new Coordinate(2, 0), 1, 4, 's', '*');
+    RectangleShip<Character> rs = new RectangleShip<Character>("submarine",new Coordinate(2, 0), 1, 4, 's', '*');
     assertEquals(rs.occupiesCoordinates(new Coordinate(2, 0)), true);
-    assertEquals(rs.occupiesCoordinates(new Coordinate(2, 1)), true);
-    assertEquals(rs.occupiesCoordinates(new Coordinate(2, 2)), true);
-    assertEquals(rs.occupiesCoordinates(new Coordinate(2, 3)), true);
+    assertEquals(rs.occupiesCoordinates(new Coordinate(3, 0)), true);
+    assertEquals(rs.occupiesCoordinates(new Coordinate(4, 0)), true);
+    assertEquals(rs.occupiesCoordinates(new Coordinate(5, 0)), true);
   }
 
   @Test
   public void test_HitAt() {
-    RectangleShip<Character> rs = new RectangleShip<Character>(new Coordinate(2, 0), 1, 4, 's', '*');
+    RectangleShip<Character> rs = new RectangleShip<Character>("submarine",new Coordinate(2, 0), 1, 4, 's', '*');
     assertThrows(IllegalArgumentException.class,()->rs.recordHitAt(new Coordinate(3, 1)));
-    rs.recordHitAt(new Coordinate(2, 1));
-    assertTrue(rs.wasHitAt(new Coordinate(2, 1)));
-    assertFalse(rs.wasHitAt(new Coordinate(2, 0)));
-    assertFalse(rs.wasHitAt(new Coordinate(2, 2)));
-    assertFalse(rs.wasHitAt(new Coordinate(2, 3)));
-    assertThrows(IllegalArgumentException.class,()->rs.wasHitAt(new Coordinate(2, 4)));
+    rs.recordHitAt(new Coordinate(2, 0));
+    assertTrue(rs.wasHitAt(new Coordinate(2, 0)));
+    assertFalse(rs.wasHitAt(new Coordinate(3, 0)));
+    assertFalse(rs.wasHitAt(new Coordinate(4, 0)));
+    assertFalse(rs.wasHitAt(new Coordinate(5, 0)));
+    assertThrows(IllegalArgumentException.class,()->rs.wasHitAt(new Coordinate(6, 0)));
     assertThrows(IllegalArgumentException.class,()->rs.wasHitAt(new Coordinate(3, 1)));
   }
 
   @Test
   public void test_isSunk(){
-    RectangleShip<Character> rs = new RectangleShip<Character>(new Coordinate(1,2), 3, 1, 's', '*');
+    RectangleShip<Character> rs = new RectangleShip<Character>("submarine",new Coordinate(1,2), 3, 1, 's', '*');
     assertFalse(rs.isSunk());
-    rs.recordHitAt(new Coordinate(2, 2));
+    rs.recordHitAt(new Coordinate(1, 3));
     assertTrue(rs.isSunk());
   }
 
   @Test
   public void test_getDisplayInfoAt(){
-    RectangleShip<Character> rs = new RectangleShip<Character>(new Coordinate(1,2), 3, 1, 's', '*');
+    RectangleShip<Character> rs = new RectangleShip<Character>("submarine",new Coordinate(1,2), 3, 1, 's', '*');
     assertEquals(rs.getDisplayInfoAt(new Coordinate(1,2)),'s');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(2,2)),'s');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(3,2)),'s');
-    rs.recordHitAt(new Coordinate(2, 2));
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1,3)),'s');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1,4)),'s');
+    rs.recordHitAt(new Coordinate(1, 3));
     assertEquals(rs.getDisplayInfoAt(new Coordinate(1,2)),'s');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(2,2)),'*');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(3,2)),'s');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1,3)),'*');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1,4)),'s');
     assertThrows(IllegalArgumentException.class,()->rs.getDisplayInfoAt(new Coordinate(3,3)));
     
   }

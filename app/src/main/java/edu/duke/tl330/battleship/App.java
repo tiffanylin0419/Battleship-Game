@@ -34,12 +34,15 @@ public class App {
 
   public void doOnePlacement() throws IOException {
     Placement p = readPlacement("Where would you like to put your ship?");
-    RectangleShip<Character> s = new RectangleShip<Character>(p.getWhere(), 's', '*');
+    final AbstractShipFactory<Character> shipFactory=new V1ShipFactory();
+    //RectangleShip<Character> s = new RectangleShip<Character>(p.getWhere(), 's', '*');
+    Ship<Character> s  = shipFactory.makeDestroyer(p);
     theBoard.tryAddShip(s);
     out.println(view.displayMyOwnBoard());
   }
 
   public static void main(String[] args) throws IOException{
+    
     Board<Character> b = new BattleShipBoard<Character>(10, 20);
     App a=new App(b,new InputStreamReader(System.in),System.out);
     a.doOnePlacement();

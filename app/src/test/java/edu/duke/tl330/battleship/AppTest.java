@@ -52,9 +52,9 @@ class AppTest {
     String expectedHeader = "  0|1|2|3|4|5|6|7|8|9\n";
     String expected = expectedHeader +
         "A  | | | | | | | | |  A\n" +
-        "B  | |s| | | | | | |  B\n" +
-        "C  | | | | | | | | |  C\n" +
-        "D  | | | | | | | | |  D\n" +
+        "B  | |d| | | | | | |  B\n" +
+        "C  | |d| | | | | | |  C\n" +
+        "D  | |d| | | | | | |  D\n" +
         "E  | | | | | | | | |  E\n" +
         "F  | | | | | | | | |  F\n" +
         "G  | | | | | | | | |  G\n" +
