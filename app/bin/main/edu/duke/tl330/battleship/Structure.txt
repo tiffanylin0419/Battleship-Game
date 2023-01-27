@@ -1,0 +1,52 @@
+
+class Coordinate
+final int row
+final int column
+int getRow()
+int getColumn()
+constructor: (int t, int c)(String)
+equals, hashCode, toString
+int charToInt(char)
+
+class Placement
+final Coordinate where
+final char orientation
+Coordinate getWhere()
+char getOrientation()
+void checkOrientation(char)
+Placement(Coordinate where, char orientation) 
+equals, hashCode, toString
+constructor: (String)
+
+
+interface Ship<T> 
+boolean occupiesCoordinates(Coordinate )
+boolean isSunk()
+void recordHitAt(Coordinate where)
+boolean wasHitAt(Coordinate where);
+T getDisplayInfoAt(Coordinate where)
+
+class BasicShip  implements Ship<Character>
+final Coordinate myLocation
+//override function
+
+
+
+interface Board<T>
+int getWidth()
+int getHeight()
+boolean tryAddShip(Ship<T> toAdd)
+T whatIsAt(Coordinate where)
+
+class BattleShipBoard<T> implements Board<T>
+final int width
+final int height
+final ArrayList<Ship<T>> myShips
+//override function
+
+
+
+class BoardTextView
+final Board<Character> toDisplay
+BoardTextView(Board<Character> toDisplay) 
+String displayMyOwnBoard()

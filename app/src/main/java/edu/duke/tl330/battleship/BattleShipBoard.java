@@ -10,10 +10,11 @@ public class BattleShipBoard<T> implements Board<T>{
   private final int height;
   private final ArrayList<Ship<T>> myShips;
 
-  
+  @Override
   public int getWidth(){
     return width;
   }
+  @Override
   public int getHeight(){
     return height;
   }
@@ -37,6 +38,7 @@ public class BattleShipBoard<T> implements Board<T>{
     this.myShips=new ArrayList<Ship<T>>();
   }
 
+  @Override
   public boolean tryAddShip(Ship<T> toAdd){
     myShips.add(toAdd);
     return true;
@@ -47,6 +49,7 @@ public class BattleShipBoard<T> implements Board<T>{
     If one is found, we return whatever displayInfo it has at those coordinates (for now, just 's').
     If none is found, we return null.
    */
+  @Override
   public T whatIsAt(Coordinate where) {
     for (Ship<T> s: myShips) {
       if (s.occupiesCoordinates(where)){
