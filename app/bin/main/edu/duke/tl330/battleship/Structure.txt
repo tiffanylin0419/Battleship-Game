@@ -76,7 +76,7 @@ final int width
 final int height
 final ArrayList<Ship<T>> myShips
 //override function
-
+Constructor: (int w, int h)(int w, int h, PlacementRuleChecker<T> placementChecker)
 
 
 class BoardTextView
