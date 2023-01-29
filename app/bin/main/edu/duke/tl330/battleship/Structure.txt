@@ -20,16 +20,47 @@ constructor: (String)
 
 
 interface Ship<T> 
+String getName
 boolean occupiesCoordinates(Coordinate )
 boolean isSunk()
 void recordHitAt(Coordinate where)
 boolean wasHitAt(Coordinate where);
 T getDisplayInfoAt(Coordinate where)
 
-?
-abstract class BasicShip  implements Ship<Character>
-Constructor: (Coordinate)(Iterable<Coordinate> )
-final HashMap<Coordinate, Boolean>  myPieces
+abstract class BasicShip<T> implements Ship<T> 
+protected HashMap<Coordinate, Boolean> myPieces;
+protected ShipDisplayInfo<T> myDisplayInfo;
+Constructor: (Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo)
+checkCoordinateInThisShip(Coordinate c)
+//override function
+
+Class RectangleShip<T> extends BasicShip<T>
+private final String name;
+String getName
+Constructor:(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo), (String name,Coordinate upperLeft, int width, int height, T data, T onHit), (Coordinate upperLeft, T data, T onHit) 
+static HashSet<Coordinate> makeCoords(Coordinate upperLeft, int width, int height)
+
+
+interface ShipDisplayInfo<T>
+T getInfo(Coordinate where, boolean hit)
+
+class SimpleShipDisplayInfo<T> implements ShipDisplayInfo<T>
+private final T myData;
+private final T onHit;
+Constructor: (T md, T oh)
+//override function
+
+
+
+
+interface AbstractShipFactory<T> 
+Ship<T> makeSubmarine(Placement where);
+Ship<T> makeBattleship(Placement where);
+Ship<T> makeCarrier(Placement where);
+Ship<T> makeDestroyer(Placement where);
+
+class V1ShipFactory implements AbstractShipFactory<Character>
+protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name)
 //override function
 
 
@@ -52,3 +83,5 @@ class BoardTextView
 final Board<Character> toDisplay
 BoardTextView(Board<Character> toDisplay) 
 String displayMyOwnBoard()
+
+

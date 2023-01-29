@@ -12,7 +12,7 @@ public class Coordinate {
     return column;
   }
 
-  //Constructor
+  // Constructor
   public Coordinate(int r, int c) {
     this.column = c;
     this.row = r;
@@ -37,14 +37,15 @@ public class Coordinate {
     return "(" + row + ", " + column + ")";
   }
 
-  //convert number character to int input'0'-'9' outpur 0-9
+  // convert number character to int input'0'-'9' outpur 0-9
   private int charToInt(char c) {
-    if (c < '0' || c >'9') {
+    if (c < '0' || c > '9') {
       throw new IllegalArgumentException("Row number must be from 0-9\n");
     }
     return c - '0';
   }
-  //Constructor from string
+
+  // Constructor from string
   public Coordinate(String descr) {
     descr = descr.toUpperCase();
     if (descr.length() != 2) {
@@ -56,6 +57,6 @@ public class Coordinate {
     }
     // this(r,c);
     this.column = charToInt(descr.charAt(1));
-    this.row = descr.charAt(0)-'A';
+    this.row = descr.charAt(0) - 'A';
   }
 }
