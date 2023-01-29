@@ -1,7 +1,7 @@
 package edu.duke.tl330.battleship;
 
 public class InBoundsRuleChecker<T> extends PlacementRuleChecker<T> {
-
+  //constructor
   public InBoundsRuleChecker(PlacementRuleChecker<T> next) {
     super(next);
   }
