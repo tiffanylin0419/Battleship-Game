@@ -1,7 +1,9 @@
 package edu.duke.tl330.battleship;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class BattleShipBoardTest {
@@ -34,26 +36,26 @@ public class BattleShipBoardTest {
     Character[][] arr = { { null, null, null }, { null, null, null }, { null, null, null } };
     checkWhatIsAtBoard(b1, arr);
     Ship<Character> s1 = new RectangleShip<Character>(new Coordinate(0, 1), 's', '*');
-    b1.tryAddShip(s1);
+    assertEquals(null,b1.tryAddShip(s1));
     arr[0][1]='s';
     checkWhatIsAtBoard(b1, arr);
     Ship<Character> s2 = new RectangleShip<Character>(new Coordinate(2, 2), 's', '*');
-    b1.tryAddShip(s2);
+    assertEquals(null,b1.tryAddShip(s2));
     arr[2][2]='s';
     checkWhatIsAtBoard(b1, arr);
 
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s3 = sf.makeDestroyer(new Placement("B0H"));
-    b1.tryAddShip(s3);
+    assertEquals(null,b1.tryAddShip(s3));
     arr[1][0]='d';
     arr[1][1]='d';
     arr[1][2]='d';
     checkWhatIsAtBoard(b1, arr);
     
     Ship<Character> s4 = sf.makeSubmarine(new Placement("A2H"));
-    assertFalse(b1.tryAddShip(s4));
+    assertEquals("That placement is invalid: the ship goes off the right of the board.",b1.tryAddShip(s4));
     Ship<Character> s5 = sf.makeSubmarine(new Placement("C1H"));
-    assertFalse(b1.tryAddShip(s5));
+    assertEquals("That placement is invalid: the ship overlaps another ship.",b1.tryAddShip(s5));
 
     checkWhatIsAtBoard(b1, arr);
   }

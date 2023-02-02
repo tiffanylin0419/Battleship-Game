@@ -1,6 +1,7 @@
 package edu.duke.tl330.battleship;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -53,6 +54,9 @@ public class TextPlayer {
     // out.println(prompt);
     out.println(prompt);
     String s = inputReader.readLine();
+    if(s==null){
+      throw new EOFException("No input.\n");
+    }
     return new Placement(s);
   }
 

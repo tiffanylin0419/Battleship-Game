@@ -1,21 +1,22 @@
 package edu.duke.tl330.battleship;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class NoCollisionRuleCheckerTest {
   private void success_add(V1ShipFactory sf,Board<Character> b,PlacementRuleChecker<Character> rc,String str){
     Ship<Character> s = sf.makeDestroyer(new Placement(str));
-    assertTrue(rc.checkPlacement(s, b));
+    assertEquals(null,rc.checkPlacement(s, b));
     b.tryAddShip(s);
   }
 
   private void failure_add(V1ShipFactory sf,Board<Character> b,PlacementRuleChecker<Character> rc,String str){
    Ship<Character> s = sf.makeDestroyer(new Placement(str));
-   assertFalse(rc.checkPlacement(s, b));
+   assertEquals("That placement is invalid: the ship overlaps another ship.",rc.checkPlacement(s, b));
   }
-  
+
   @Test
   public void test_checkMyRule() {
     V1ShipFactory sf = new V1ShipFactory();
@@ -42,8 +43,8 @@ public class NoCollisionRuleCheckerTest {
     success_add(sf,b,rc,"C3H");
     success_add(sf,b,rc,"D5V");
     
-    failure_add(sf,b,rc,"D5H");
-    failure_add(sf,b,rc,"I3V");
+    failure_add(sf,b,rc,"E4H");
+    failure_add(sf,b,rc,"B3V");
     failure_add(sf,b,rc,"B4V");
     }
 }

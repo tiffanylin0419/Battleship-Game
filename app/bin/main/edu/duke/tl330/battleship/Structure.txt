@@ -14,9 +14,8 @@ final char orientation
 Coordinate getWhere()
 char getOrientation()
 void checkOrientation(char)
-Placement(Coordinate where, char orientation) 
 equals, hashCode, toString
-constructor: (String)
+constructor: (String)(Coordinate where, char orientation) 
 
 
 interface Ship<T> 
@@ -70,6 +69,8 @@ public boolean checkPlacement(Ship<T> theShip, Board<T> theBoard)
 protected abstract boolean checkMyRule(Ship<T> theShip, Board<T> theBoard);
 
 class InBoundsRuleChecker<T> extends PlacementRuleChecker<T>  
+Same as bottom
+
 class NoCollisionRuleChecker<T> extends PlacementRuleChecker<T>  // two classes are almost the same
 Constructor: (PlacementRuleChecker<T> next)
 //override function

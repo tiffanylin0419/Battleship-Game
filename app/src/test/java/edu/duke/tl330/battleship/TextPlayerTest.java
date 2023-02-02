@@ -1,9 +1,11 @@
 package edu.duke.tl330.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -41,6 +43,19 @@ public class TextPlayerTest {
 
   }
 
+  @Test
+  void test_read_placement_error() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player1 = createTextPlayer(10, 20, "", bytes);
+    assertThrows(EOFException.class,() -> player1.doOnePlacement());
+
+
+    TextPlayer player2 = createTextPlayer(10, 20, "A0Q", bytes);
+    assertThrows(IllegalArgumentException.class,() -> player2.doOnePlacement());
+
+    TextPlayer player3 = createTextPlayer(10, 20, "AAV", bytes);
+    assertThrows(IllegalArgumentException.class,() -> player3.doOnePlacement());
+  }
   @Test
   void test_do_one_placement() throws IOException {
 
