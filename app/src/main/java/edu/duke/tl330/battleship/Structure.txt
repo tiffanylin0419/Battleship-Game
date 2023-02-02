@@ -97,3 +97,10 @@ BoardTextView(Board<Character> toDisplay)
 String displayMyOwnBoard()
 
 
+
+
+App
+TextPlayer
+
+
+

@@ -12,40 +12,30 @@ import java.io.Reader;
 import java.io.StringReader;
 
 public class App {
+  private TextPlayer player1;
+  private TextPlayer player2;
 
-  final Board<Character> theBoard;
-  final BoardTextView view;
-  final BufferedReader inputReader;
-  final PrintStream out;
+  // constructor
+  public App(TextPlayer player1, TextPlayer player2) {
+    this.player1 = player1;
+    this.player2 = player2;
 
-  public App(Board<Character> theBoard, Reader inputSource, PrintStream out) {
-    this.theBoard = theBoard;
-    this.view = new BoardTextView(theBoard);
-    this.inputReader = new BufferedReader(inputSource);
-    this.out = out;// System.out;
   }
 
-  public Placement readPlacement(String prompt) throws IOException {
-    // out.println(prompt);
-    out.println(prompt);
-    String s = inputReader.readLine();
-    return new Placement(s);
+  public void doPlacementPhase()  throws IOException{
+    this.player1.doPlacementPhase();
+    this.player2.doPlacementPhase();
   }
+  public static void main(String[] args) throws IOException {
 
-  public void doOnePlacement() throws IOException {
-    Placement p = readPlacement("Where would you like to put your ship?");
-    final AbstractShipFactory<Character> shipFactory=new V1ShipFactory();
-    //RectangleShip<Character> s = new RectangleShip<Character>(p.getWhere(), 's', '*');
-    Ship<Character> s  = shipFactory.makeDestroyer(p);
-    theBoard.tryAddShip(s);
-    out.println(view.displayMyOwnBoard());
-  }
-
-  public static void main(String[] args) throws IOException{
-    
-    Board<Character> b = new BattleShipBoard<Character>(10, 20);
-    App a=new App(b,new InputStreamReader(System.in),System.out);
-    a.doOnePlacement();
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20);
+    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    V1ShipFactory factory = new V1ShipFactory();
+    TextPlayer p1 = new TextPlayer("A", b1, input, System.out, factory);
+    TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
+    App app=new App(p1,p2);
+    app.doPlacementPhase();
     
   }
 }

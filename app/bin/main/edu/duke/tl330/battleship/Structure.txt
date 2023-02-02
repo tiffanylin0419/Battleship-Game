@@ -63,6 +63,17 @@ class V1ShipFactory implements AbstractShipFactory<Character>
 protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name)
 //override function
 
+abstract class PlacementRuleChecker<T>
+private final PlacementRuleChecker<T> next;
+constructor: (PlacementRuleChecker<T> next)
+public boolean checkPlacement(Ship<T> theShip, Board<T> theBoard) 
+protected abstract boolean checkMyRule(Ship<T> theShip, Board<T> theBoard);
+
+class InBoundsRuleChecker<T> extends PlacementRuleChecker<T>  
+class NoCollisionRuleChecker<T> extends PlacementRuleChecker<T>  // two classes are almost the same
+Constructor: (PlacementRuleChecker<T> next)
+//override function
+
 
 
 interface Board<T>
@@ -75,6 +86,7 @@ class BattleShipBoard<T> implements Board<T>
 final int width
 final int height
 final ArrayList<Ship<T>> myShips
+private final PlacementRuleChecker<T> placementChecker;
 //override function
 Constructor: (int w, int h)(int w, int h, PlacementRuleChecker<T> placementChecker)
 
@@ -83,5 +95,12 @@ class BoardTextView
 final Board<Character> toDisplay
 BoardTextView(Board<Character> toDisplay) 
 String displayMyOwnBoard()
+
+
+
+
+App
+TextPlayer
+
 
 
