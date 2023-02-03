@@ -1,5 +1,6 @@
 package edu.duke.tl330.battleship;
 
+
 public class Coordinate {
   private final int row;
   private final int column;
