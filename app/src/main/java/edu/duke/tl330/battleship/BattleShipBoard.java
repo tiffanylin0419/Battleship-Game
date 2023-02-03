@@ -1,6 +1,7 @@
 package edu.duke.tl330.battleship;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * This class implements a board for battleship game.
@@ -10,7 +11,8 @@ public class BattleShipBoard<T> implements Board<T> {
   private final int height;
   private final ArrayList<Ship<T>> myShips;
   private final PlacementRuleChecker<T> placementChecker;
-
+  private HashSet<Coordinate> enemyMisses;
+  
   @Override
   public int getWidth() {
     return width;
@@ -76,6 +78,17 @@ public class BattleShipBoard<T> implements Board<T> {
         return s.getDisplayInfoAt(where);
       }
     }
+    return null;
+  }
+
+  public Ship<T> fireAt(Coordinate c){
+    for (Ship<T> s : myShips) {
+      if (s.occupiesCoordinates(c)) {
+        s.recordHitAt(c);
+         return s;
+      }
+    }
+    enemyMisses.add(c);
     return null;
   }
 }
