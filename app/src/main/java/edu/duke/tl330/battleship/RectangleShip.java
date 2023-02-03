@@ -24,6 +24,7 @@ public class RectangleShip<T> extends BasicShip<T> {
   // constructor for 1*1, only used for testing
   public RectangleShip(Coordinate upperLeft, T data, T onHit) {
     this("testship",upperLeft, 1, 1, data, onHit);
+    
   }
 
   // return the coords where the ship occupies
