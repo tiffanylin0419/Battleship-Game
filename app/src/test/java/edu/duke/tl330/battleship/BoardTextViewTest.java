@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class BoardTextViewTest {
   private void emptyBoardHelper(int w, int h, String expectedHeader, String expected){
-    Board<Character> b1 = new BattleShipBoard<Character>(w, h);
+    Board<Character> b1 = new BattleShipBoard<Character>(w, h,'X');
     BoardTextView view = new BoardTextView(b1);
     assertEquals(expectedHeader, view.makeHeader());
     assertEquals(expected, view.displayMyOwnBoard());
@@ -49,8 +49,8 @@ public class BoardTextViewTest {
   }
   @Test
   public void test_invalid_board_size() {
-    Board<Character> wideBoard = new BattleShipBoard<Character>(11,20);
-    Board<Character> tallBoard = new BattleShipBoard<Character>(10,27);
+    Board<Character> wideBoard = new BattleShipBoard<Character>(11,20,'X');
+    Board<Character> tallBoard = new BattleShipBoard<Character>(10,27,'X');
     assertThrows(IllegalArgumentException.class, () -> new BoardTextView(wideBoard));
     assertThrows(IllegalArgumentException.class, () -> new BoardTextView(tallBoard));
   }
@@ -61,7 +61,7 @@ public class BoardTextViewTest {
   } 
   @Test
   public void test_display_my_board_3by4(){
-    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3,4);
+    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3,4,'X');
     b1.tryAddShip(new RectangleShip<Character>(new Coordinate("B0"), 's', '*'));
     b1.tryAddShip(new RectangleShip<Character>(new Coordinate(2, 2), 's', '*'));
     b1.tryAddShip(new RectangleShip<Character>(new Coordinate(3, 2), 's', '*'));

@@ -15,7 +15,7 @@ public class InBoundsRuleCheckerTest {
     Ship<Character> s4 = sf.makeDestroyer(new Placement("A5H"));
     Ship<Character> s5 = sf.makeSubmarine(new Placement("A6H"));
     Ship<Character> s6 = sf.makeSubmarine(new Placement("L0V"));
-    Board<Character> b = new BattleShipBoard<Character>(7, 10);
+    Board<Character> b = new BattleShipBoard<Character>(7, 10,'X');
     PlacementRuleChecker<Character> rc = new InBoundsRuleChecker<Character>(null);
 
     assertEquals(null, rc.checkPlacement(s1, b));

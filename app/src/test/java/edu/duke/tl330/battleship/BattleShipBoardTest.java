@@ -11,17 +11,17 @@ import org.junit.jupiter.api.Test;
 public class BattleShipBoardTest {
   @Test
   public void test_width_and_height() {
-    Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20,'X');
     assertEquals(10, b1.getWidth());
     assertEquals(20, b1.getHeight());
   }
 
   @Test
   public void test_invalid_dimensions() {
-    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(10, 0));
-    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(0, 20));
-    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(10, -5));
-    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(-8, 20));
+    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(10, 0,'X'));
+    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(0, 20,'X'));
+    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(10, -5,'X'));
+    assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(-8, 20,'X'));
   }
 
   private <T> void checkWhatIsAtBoard(BattleShipBoard<T> b, T[][] expected) {
@@ -34,7 +34,7 @@ public class BattleShipBoardTest {
 
   @Test
   public void test_tryAddShip() {
-    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3, 3);
+    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(3, 3,'X');
     Character[][] arr = { { null, null, null }, { null, null, null }, { null, null, null } };
     checkWhatIsAtBoard(b1, arr);
     Ship<Character> s1 = new RectangleShip<Character>(new Coordinate(0, 1), 's', '*');
@@ -71,7 +71,7 @@ public class BattleShipBoardTest {
    }
   @Test
   public void test_fireAt() {
-    Board<Character> b = new BattleShipBoard<Character>(5, 5);
+    Board<Character> b = new BattleShipBoard<Character>(5, 5,'X');
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
     Ship<Character> s2 = sf.makeDestroyer(new Placement("B3V"));

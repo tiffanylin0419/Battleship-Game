@@ -21,7 +21,7 @@ public class NoCollisionRuleCheckerTest {
   public void test_checkMyRule() {
     V1ShipFactory sf = new V1ShipFactory();
     PlacementRuleChecker<Character> rc = new NoCollisionRuleChecker<Character>(null);
-    Board<Character> b = new BattleShipBoard<Character>(7, 10);
+    Board<Character> b = new BattleShipBoard<Character>(7, 10,'X');
     success_add(sf,b,rc,"A0H");
     success_add(sf,b,rc,"B2V");
     success_add(sf,b,rc,"C3H");
@@ -36,7 +36,7 @@ public class NoCollisionRuleCheckerTest {
   public void test_checkMyRule_2(){
     V1ShipFactory sf = new V1ShipFactory();
     PlacementRuleChecker<Character> rc = new NoCollisionRuleChecker<Character>(new InBoundsRuleChecker<Character>(null));
-    Board<Character> b = new BattleShipBoard<Character>(7, 10);
+    Board<Character> b = new BattleShipBoard<Character>(7, 10,'X');
     
     success_add(sf,b,rc,"A0H");
     success_add(sf,b,rc,"B2V");
