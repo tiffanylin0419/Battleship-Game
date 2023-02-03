@@ -27,7 +27,7 @@ public class BattleShipBoardTest {
   private <T> void checkWhatIsAtBoard(BattleShipBoard<T> b, T[][] expected) {
     for (int i = 0; i < b.getWidth(); i++) {
       for (int j = 0; j < b.getHeight(); j++) {
-        assertEquals(b.whatIsAt(new Coordinate(i, j)), expected[i][j]);
+        assertEquals(b.whatIsAtForSelf(new Coordinate(i, j)), expected[i][j]);
       }
     }
   }

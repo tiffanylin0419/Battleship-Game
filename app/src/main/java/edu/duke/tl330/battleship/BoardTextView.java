@@ -58,7 +58,7 @@ public class BoardTextView {
       String sep="";
       for (int j = 0; j < toDisplay.getWidth(); j++) {
         line.append(sep);
-        Character c=toDisplay.whatIsAt(new Coordinate(i,j));
+        Character c=toDisplay.whatIsAtForSelf(new Coordinate(i,j));
         if(c!=null){
           line.append(c);
         }

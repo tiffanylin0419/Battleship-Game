@@ -73,15 +73,20 @@ public class RectangleShipTest {
   @Test
   public void test_getDisplayInfoAt() {
     RectangleShip<Character> rs = new RectangleShip<Character>("submarine", new Coordinate(1, 2), 3, 1, 's', '*');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2)), 's');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3)), 's');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4)), 's');
+    //self
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),true), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3),true), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4),true), 's');
     rs.recordHitAt(new Coordinate(1, 3));
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2)), 's');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3)), '*');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4)), 's');
-    assertThrows(IllegalArgumentException.class, () -> rs.getDisplayInfoAt(new Coordinate(3, 3)));
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),true), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3),true), '*');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4),true), 's');
+    assertThrows(IllegalArgumentException.class, () -> rs.getDisplayInfoAt(new Coordinate(3, 3),true));
 
+    //enemy
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),false), null);
+    rs.recordHitAt(new Coordinate(1, 2));
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),false), 's');
   }
 
   private void checkCoord(Ship<Character> testShip, Coordinate... expectedLocs) {

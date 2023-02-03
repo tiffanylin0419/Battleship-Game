@@ -7,6 +7,7 @@ public abstract class BasicShip<T> implements Ship<T> {
   // if myPieces.get(c) is false, c is part of this ship and has not been hit
   // if myPieces.get(c) is true, c is part of this ship and has been hit
   protected HashMap<Coordinate, Boolean> myPieces;
+  
   protected ShipDisplayInfo<T> myDisplayInfo;
   protected ShipDisplayInfo<T> enemyDisplayInfo;
 
