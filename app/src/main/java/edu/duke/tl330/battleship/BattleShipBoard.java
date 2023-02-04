@@ -111,7 +111,8 @@ public class BattleShipBoard<T> implements Board<T> {
     }
     return null;
   }
-
+  
+  @Override
   public Ship<T> fireAt(Coordinate c) {
     for (Ship<T> s : myShips) {
       if (s.occupiesCoordinates(c)) {
