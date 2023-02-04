@@ -48,10 +48,10 @@ public class BattleShipBoardTest {
     b1.tryAddShip(s1);
     checkWhatIsAtBoardEnemy(b1, arr);
     b1.fireAt(new Coordinate(0, 1));
-    arr[0][1]='s';
+    arr[0][1] = 's';
     checkWhatIsAtBoardEnemy(b1, arr);
     b1.fireAt(new Coordinate(0, 2));
-    arr[0][2]='X';
+    arr[0][2] = 'X';
     checkWhatIsAtBoardEnemy(b1, arr);
   }
 
@@ -111,6 +111,25 @@ public class BattleShipBoardTest {
     test_hit(b, s1, b.fireAt(new Coordinate(0, 0)));
     test_hit(b, s2, b.fireAt(new Coordinate(3, 3)));
     test_hit(b, s3, b.fireAt(new Coordinate(4, 2)));
+  }
+
+  @Test
+  public void test_noShips() {
+    Board<Character> b = new BattleShipBoard<Character>(5, 5, 'X');
+    V1ShipFactory sf = new V1ShipFactory();
+    Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
+    Ship<Character> s2 = sf.makeDestroyer(new Placement("B3V"));
+    Ship<Character> s3 = sf.makeBattleship(new Placement("E1H"));
+    b.tryAddShip(s1);
+    b.tryAddShip(s2);
+    b.tryAddShip(s3);
+    
+    assertFalse(b.noShips());
+
+    b.fireAt(new Coordinate(0, 0));
+      b.fireAt(new Coordinate(3, 3));
+      b.fireAt(new Coordinate(4, 2));
+    assertTrue(b.noShips());  
   }
 
 }

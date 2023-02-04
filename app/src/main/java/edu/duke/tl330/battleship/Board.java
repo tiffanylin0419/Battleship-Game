@@ -7,5 +7,6 @@ public interface Board<T> {
   public T whatIsAtForSelf(Coordinate where);
   public T whatIsAtForEnemy(Coordinate where);
   public Ship<T> fireAt(Coordinate c);
+  public boolean noShips();
 }
 

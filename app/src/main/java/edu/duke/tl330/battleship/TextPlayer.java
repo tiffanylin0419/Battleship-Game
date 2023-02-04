@@ -18,7 +18,6 @@ public class TextPlayer {
   final AbstractShipFactory<Character> shipFactory;
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
-
   // constructor
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
       AbstractShipFactory<Character> shipFactory) {
@@ -33,7 +32,7 @@ public class TextPlayer {
     setupShipCreationMap();
     setupShipCreationList();
   }
-
+  
   protected void setupShipCreationMap() {
     shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
     shipCreationFns.put("Battleship", (p) -> shipFactory.makeBattleship(p));

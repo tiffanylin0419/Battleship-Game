@@ -34,7 +34,7 @@ public class BattleShipBoard<T> implements Board<T> {
    */
   public BattleShipBoard(int w, int h, T missInfo) {
     this(w, h, new NoCollisionRuleChecker<T>(new InBoundsRuleChecker<T>(null)), missInfo);// new
-                                    // NoCollisionRuleChecker<>(new
+    // NoCollisionRuleChecker<>(new
     // InBoundsRuleChecker<T>(null))
   }
 
@@ -58,7 +58,7 @@ public class BattleShipBoard<T> implements Board<T> {
     this.height = h;
     this.myShips = new ArrayList<Ship<T>>();
     this.placementChecker = placementChecker;
-    this.enemyMisses=new HashSet<Coordinate>();
+    this.enemyMisses = new HashSet<Coordinate>();
     this.missInfo = missInfo;
   }
 
@@ -89,6 +89,17 @@ public class BattleShipBoard<T> implements Board<T> {
 
   }
 
+  //true if all ship is sunk
+  @Override
+  public boolean noShips() {
+    for (Ship<T> i : myShips) {
+      if (!i.isSunk()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   protected T whatIsAt(Coordinate where, boolean isSelf) {
     for (Ship<T> s : myShips) {
       if (s.occupiesCoordinates(where)) {
@@ -96,7 +107,7 @@ public class BattleShipBoard<T> implements Board<T> {
       }
     }
     if (isSelf == false && enemyMisses.contains(where)) {
-      return missInfo;//'X'
+      return missInfo;// 'X'
     }
     return null;
   }
