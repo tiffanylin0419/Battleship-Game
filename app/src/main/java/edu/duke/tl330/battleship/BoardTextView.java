@@ -91,4 +91,16 @@ public class BoardTextView {
     ans.append(makeHeader());
     return ans.toString(); // this is a placeholder for the moment
   }
+  public String displayMyBoardWithEnemyNextToIt(BoardTextView enemyView, String myHeader, String enemyHeader){
+    String s="     "+ myHeader+"                           "+enemyHeader+"\n";
+    String [] line1 = displayMyOwnBoard().split("\n");
+    String [] line2 = enemyView.displayEnemyBoard().split("\n");
+    s+=line1[0]+"                  "+line2[0]+"\n";
+    for (int i=1;i< line1.length-1;i++) {
+      s+=line1[i]+"                "+line2[i]+"\n";
+    }
+    s+=line1[line1.length-1]+"                  "+line2[line1.length-1]+"\n";
+    return s;
+    
+  }
 }
