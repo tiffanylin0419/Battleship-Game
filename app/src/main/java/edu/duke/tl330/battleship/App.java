@@ -22,6 +22,7 @@ public class App {
 
   }
 
+  
   public void doPlacementPhase() throws IOException {
     this.player1.doPlacementPhase();
     this.player2.doPlacementPhase();
