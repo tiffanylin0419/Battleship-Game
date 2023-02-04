@@ -18,11 +18,12 @@ public class TextPlayerTest {
   private TextPlayer createTextPlayer(int w, int h, String inputData, OutputStream bytes) {
     BufferedReader input = new BufferedReader(new StringReader(inputData));
     PrintStream output = new PrintStream(bytes, true);
-    Board<Character> board = new BattleShipBoard<Character>(w, h,'X');
+    Board<Character> board = new BattleShipBoard<Character>(w, h, 'X');
     V1ShipFactory shipFactory = new V1ShipFactory();
     return new TextPlayer("A", board, input, output, shipFactory);
   }
 
+  // @Disabled
   @Test
   void test_read_placement() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -47,15 +48,35 @@ public class TextPlayerTest {
   void test_read_placement_error() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player1 = createTextPlayer(10, 20, "", bytes);
-    assertThrows(EOFException.class,() -> player1.doOnePlacement());
-
+    assertThrows(EOFException.class, () -> player1.doOnePlacement());
 
     TextPlayer player2 = createTextPlayer(10, 20, "A0Q", bytes);
-    assertThrows(IllegalArgumentException.class,() -> player2.doOnePlacement());
+    assertThrows(IllegalArgumentException.class, () -> player2.doOnePlacement());
 
     TextPlayer player3 = createTextPlayer(10, 20, "AAV", bytes);
-    assertThrows(IllegalArgumentException.class,() -> player3.doOnePlacement());
+    assertThrows(IllegalArgumentException.class, () -> player3.doOnePlacement());
   }
+
+  @Test
+  void test_readCoordinate() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10, 20, "B2\nC8\na4\n", bytes);
+    Coordinate c = player.readCoordinate();
+    assertEquals(new Coordinate(1, 2), c);
+
+    TextPlayer player1 = createTextPlayer(10, 20, "", bytes);
+    assertThrows(IOException.class, () -> player1.readCoordinate());
+  }
+
+  @Test
+  void test_do_one_placement_error() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10, 10, "B9h\nd9h\n", bytes);
+    //player.doOnePlacement();
+    //String expected = "Player A where do you want to place a Destroyer?\nThat placement is invalid: the ship goes off the right of the board.\n";
+    assertThrows(EOFException.class,()->player.doOnePlacement());
+  }
+
   @Test
   void test_do_one_placement() throws IOException {
 
@@ -81,7 +102,69 @@ public class TextPlayerTest {
 
   }
 
-  
+  @Test
+  public void test_playOneTurn() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player1 = createTextPlayer(5, 5, "C2\nC5\n", bytes);
+    TextPlayer player2 = createTextPlayer(5, 5, "B2V\n", bytes);
+    player2.doOnePlacement("Submarine", player2.shipCreationFns.get("Submarine"));
+    player1.playOneTurn(player2);
+
+    String expectedHeader = "  0|1|2|3|4";
+    String expected = "Player A where do you want to place a Submarine?\n" +
+        expectedHeader + "\n" +
+        "A  | | | |  A\n" +
+        "B  | |s| |  B\n" +
+        "C  | |s| |  C\n" +
+        "D  | | | |  D\n" +
+        "E  | | | |  E\n" +
+        expectedHeader + "\n" +
+        "Player A's turn:\n" +
+        "     Your ocean                           Player A's ocean\n" +
+        expectedHeader + "                  " + expectedHeader + "\n" +
+        "A  | | | |  A                A  | | | |  A\n" +
+        "B  | | | |  B                B  | | | |  B\n" +
+        "C  | | | |  C                C  | | | |  C\n" +
+        "D  | | | |  D                D  | | | |  D\n" +
+        "E  | | | |  E                E  | | | |  E\n" +
+        expectedHeader + "                  " + expectedHeader + "\n" +
+        "You hit a submarine!\n";
+
+    assertEquals(expected, bytes.toString());
+
+    player1.playOneTurn(player2);
+    expected += "Player A's turn:\n" +
+        "     Your ocean                           Player A's ocean\n" +
+        expectedHeader + "                  " + expectedHeader + "\n" +
+        "A  | | | |  A                A  | | | |  A\n" +
+        "B  | | | |  B                B  | | | |  B\n" +
+        "C  | | | |  C                C  | |s| |  C\n" +
+        "D  | | | |  D                D  | | | |  D\n" +
+        "E  | | | |  E                E  | | | |  E\n" +
+        expectedHeader + "                  " + expectedHeader + "\n" +
+        "You missed!\n";
+    assertEquals(expected, bytes.toString());
+  }
+
+  @Test
+  public void test_SmallPlacementPhase_small() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(5, 5, "B2V\nC5H\nd7v\nd1h\nA4h\nA9H\nB8H\nH3H\nE0V\ni2h\n", bytes);
+    player.doOnePlacement("Submarine", player.shipCreationFns.get("Submarine"));
+    String expectedHeader = "  0|1|2|3|4\n";
+    String expected = "Player A where do you want to place a Submarine?\n" +
+        expectedHeader +
+        "A  | | | |  A\n" +
+        "B  | |s| |  B\n" +
+        "C  | |s| |  C\n" +
+        "D  | | | |  D\n" +
+        "E  | | | |  E\n" +
+        expectedHeader;
+
+    assertEquals(expected, bytes.toString());
+
+  }
+
   @Test
   public void test_SmallPlacementPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -89,8 +172,8 @@ public class TextPlayerTest {
     V1ShipFactory shipFactory = new V1ShipFactory();
     player.doOnePlacement("Submarine", player.shipCreationFns.get("Submarine"));
     String expectedHeader = "  0|1|2|3|4|5|6|7|8|9\n";
-    String expected = "Player A where do you want to place a Submarine?\n"+
-      expectedHeader +
+    String expected = "Player A where do you want to place a Submarine?\n" +
+        expectedHeader +
         "A  | | | | | | | | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
         "C  | |s| | | | | | |  C\n" +
@@ -101,7 +184,7 @@ public class TextPlayerTest {
         "H  | | | | | | | | |  H\n" +
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
-        expectedHeader ;
+        expectedHeader;
 
     assertEquals(expected, bytes.toString());
 
@@ -111,7 +194,7 @@ public class TextPlayerTest {
   public void test_doPlacementPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player = createTextPlayer(10, 10,
-        "B2V\nC5H\nd7v\nd1h\nA4h\nA9v\nB8v\nH3H\nE0V\ni2h\n" ,
+        "B2V\nB2V\nC9h\nC5H\nd7v\nd1h\nA4h\nA9v\nB8v\nH3H\nE0V\ni2h\n",
         bytes);
     player.doPlacementPhase();
 
@@ -128,8 +211,9 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-        "\nPlayer A: you are going to place the following ships (which are all\nrectangular). For each ship, type the coordinate of the upper left\nside of the ship, followed by either H (for horizontal) or V (for\nvertical).  For example M4H would place a ship horizontally starting\nat M4 and going to the right.  You have\n\n2 \"Submarines\" ships that are 1x2\n3 \"Destroyers\" that are 1x3\n3 \"Battleships\" that are 1x4\n2 \"Carriers\" that are 1x6\n" +
-      "Player A where do you want to place a Submarine?\n" +
+        "\nPlayer A: you are going to place the following ships (which are all\nrectangular). For each ship, type the coordinate of the upper left\nside of the ship, followed by either H (for horizontal) or V (for\nvertical).  For example M4H would place a ship horizontally starting\nat M4 and going to the right.  You have\n\n2 \"Submarines\" ships that are 1x2\n3 \"Destroyers\" that are 1x3\n3 \"Battleships\" that are 1x4\n2 \"Carriers\" that are 1x6\n"
+        +
+        "Player A where do you want to place a Submarine?\n" +
         expectedHeader +
         "A  | | | | | | | | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
@@ -142,8 +226,12 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-      "Player A where do you want to place a Submarine?\n" +
-        expectedHeader +
+        "Player A where do you want to place a Submarine?\n" +
+        "That placement is invalid: the ship overlaps another ship.\n" +
+        "Player A where do you want to place a Submarine?\n" +
+      "That placement is invalid: the ship goes off the right of the board.\n" +
+       "Player A where do you want to place a Submarine?\n" +
+      expectedHeader +
         "A  | | | | | | | | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
         "C  | |s| | |s|s| | |  C\n" +
@@ -155,7 +243,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-      "Player A where do you want to place a Destroyer?\n" +
+        "Player A where do you want to place a Destroyer?\n" +
         expectedHeader +
         "A  | | | | | | | | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
@@ -168,7 +256,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-      "Player A where do you want to place a Destroyer?\n" +
+        "Player A where do you want to place a Destroyer?\n" +
         expectedHeader +
         "A  | | | | | | | | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
@@ -181,7 +269,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-       "Player A where do you want to place a Destroyer?\n" +
+        "Player A where do you want to place a Destroyer?\n" +
         expectedHeader +
         "A  | | | |d|d|d| | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
@@ -194,7 +282,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-       "Player A where do you want to place a Battleship?\n" +
+        "Player A where do you want to place a Battleship?\n" +
         expectedHeader +
         "A  | | | |d|d|d| | |b A\n" +
         "B  | |s| | | | | | |b B\n" +
@@ -207,7 +295,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-       "Player A where do you want to place a Battleship?\n" +
+        "Player A where do you want to place a Battleship?\n" +
         expectedHeader +
         "A  | | | |d|d|d| | |b A\n" +
         "B  | |s| | | | | |b|b B\n" +
@@ -220,7 +308,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-       "Player A where do you want to place a Battleship?\n" +
+        "Player A where do you want to place a Battleship?\n" +
         expectedHeader +
         "A  | | | |d|d|d| | |b A\n" +
         "B  | |s| | | | | |b|b B\n" +
@@ -233,7 +321,7 @@ public class TextPlayerTest {
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
-       "Player A where do you want to place a Carrier?\n" +
+        "Player A where do you want to place a Carrier?\n" +
         expectedHeader +
         "A  | | | |d|d|d| | |b A\n" +
         "B  | |s| | | | | |b|b B\n" +
@@ -248,7 +336,7 @@ public class TextPlayerTest {
         expectedHeader +
         "Player A where do you want to place a Carrier?\n" +
         expectedHeader +
-      
+
         "A  | | | |d|d|d| | |b A\n" +
         "B  | |s| | | | | |b|b B\n" +
         "C  | |s| | |s|s| |b|b C\n" +
@@ -260,12 +348,11 @@ public class TextPlayerTest {
         "I c| |c|c|c|c|c|c| |  I\n" +
         "J c| | | | | | | | |  J\n" +
         expectedHeader;
-    
-    assertEquals(expected, bytes.toString());
-    //String a1=expected.substring(3900,4000);//0~1;
-    //String a2= bytes.toString().substring(3900,4000);
-    //assertEquals(a1,a2);
-  }
 
+    assertEquals(expected, bytes.toString());
+    // String a1=expected.substring(3900,4000);//0~1;
+    // String a2= bytes.toString().substring(3900,4000);
+    // assertEquals(a1,a2);
+  }
 
 }

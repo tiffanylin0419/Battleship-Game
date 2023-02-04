@@ -22,20 +22,37 @@ public class App {
 
   }
 
-  public void doPlacementPhase()  throws IOException{
+  public void doPlacementPhase() throws IOException {
     this.player1.doPlacementPhase();
     this.player2.doPlacementPhase();
   }
+
+  public void doAttackingPhase() throws IOException {
+    while (true) {
+      if (player1.theBoard.noShips()) {
+        player1.out.println("Player " + player2.name + " win. Player " + player1.name + " lose.");
+        return;
+      }
+      player1.playOneTurn(player2);
+      if (player2.theBoard.noShips()) {
+        player2.out.println("Player " + player1.name + " win. Player " + player2.name + " lose.");
+        return;
+      }
+      player2.playOneTurn(player1);
+    }
+
+  }
+
   public static void main(String[] args) throws IOException {
 
-    Board<Character> b1 = new BattleShipBoard<Character>(10, 20,'X');
-    Board<Character> b2 = new BattleShipBoard<Character>(10, 20,'X');
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     V1ShipFactory factory = new V1ShipFactory();
     TextPlayer p1 = new TextPlayer("A", b1, input, System.out, factory);
     TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
-    App app=new App(p1,p2);
+    App app = new App(p1, p2);
     app.doPlacementPhase();
-    
+    app.doAttackingPhase();
   }
 }

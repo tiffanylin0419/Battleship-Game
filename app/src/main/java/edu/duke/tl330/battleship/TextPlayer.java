@@ -14,10 +14,11 @@ public class TextPlayer {
   final PrintStream out;
   final Board<Character> theBoard;
   final BoardTextView view;
-  private String name;
+  final String name;
   final AbstractShipFactory<Character> shipFactory;
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+
   // constructor
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
       AbstractShipFactory<Character> shipFactory) {
@@ -32,7 +33,7 @@ public class TextPlayer {
     setupShipCreationMap();
     setupShipCreationList();
   }
-  
+
   protected void setupShipCreationMap() {
     shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
     shipCreationFns.put("Battleship", (p) -> shipFactory.makeBattleship(p));
@@ -53,10 +54,18 @@ public class TextPlayer {
     // out.println(prompt);
     out.println(prompt);
     String s = inputReader.readLine();
-    if(s==null){
+    if (s == null) {
       throw new EOFException("No input.\n");
     }
     return new Placement(s);
+  }
+
+  public Coordinate readCoordinate() throws IOException {
+    String s = inputReader.readLine();
+    if (s == null) {
+      throw new EOFException("No input.\n");
+    }
+    return new Coordinate(s);
   }
 
   // read input
@@ -66,8 +75,14 @@ public class TextPlayer {
     // RectangleShip<Character> s = new RectangleShip<Character>(p.getWhere(), 's',
     // '*');
     Ship<Character> s = shipFactory.makeDestroyer(p);
-    theBoard.tryAddShip(s);
-    out.println(view.displayMyOwnBoard());
+    String error = theBoard.tryAddShip(s);
+    while (error != null) {
+      out.println(error);
+      p = readPlacement("Player " + name + " where do you want to place a Destroyer?");
+      Ship<Character> s1 = shipFactory.makeDestroyer(p);
+      error = theBoard.tryAddShip(s1);
+    }  out.println(view.displayMyOwnBoard());
+    
   }
 
   // called with
@@ -76,8 +91,14 @@ public class TextPlayer {
     Placement p = readPlacement("Player " + name +
         " where do you want to place a " + shipName + "?");
     Ship<Character> s = createFn.apply(p);
-    theBoard.tryAddShip(s);
-    out.print(view.displayMyOwnBoard());
+    String error = theBoard.tryAddShip(s);
+    while (error != null) {
+      out.println(error);
+      p = readPlacement("Player " + name +" where do you want to place a " + shipName + "?");
+      s = createFn.apply(p);
+      error = theBoard.tryAddShip(s);
+    }  out.print(view.displayMyOwnBoard());
+    
   }
 
   // print empty board
@@ -92,4 +113,18 @@ public class TextPlayer {
       doOnePlacement(i, shipCreationFns.get(i));
     }
   }
+
+  public void playOneTurn(TextPlayer enemy) throws IOException {
+    // Board<Character> theBoardEnemy,BoardTextView viewEnemy, String nameEnemy){
+    out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, name, enemy.name));
+    Coordinate c = readCoordinate();
+
+    Ship<Character> s = enemy.theBoard.fireAt(c);
+    if (s != null) {
+      out.println("You hit a " + s.getName().toLowerCase() + "!");
+    } else {
+      out.println("You missed!");
+    }
+  }
+
 }

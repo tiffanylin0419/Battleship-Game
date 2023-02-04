@@ -68,7 +68,7 @@ public class BoardTextViewTest {
   private void BoardHelperBoth(BattleShipBoard<Character> b1, BattleShipBoard<Character> b2, String expected) {
     BoardTextView view1 = new BoardTextView(b1);
     BoardTextView view2 = new BoardTextView(b2);
-    assertEquals(view1.displayMyBoardWithEnemyNextToIt(view2, "Your ocean", "Player B's ocean"), expected);
+    assertEquals(view1.displayMyBoardWithEnemyNextToIt(view2, "A", "B"), expected);
   }
 
   @Test
@@ -115,7 +115,8 @@ public class BoardTextViewTest {
     b2.fireAt(new Coordinate(0, 0));
     
     String expectedHeader = "0|1|2";
-    String expected ="     Your ocean                           Player B's ocean\n"+
+    String expected ="Player A's turn:\n"+
+      "     Your ocean                           Player B's ocean\n"+
       "  "+expectedHeader +"                    "+expectedHeader+"\n"+
         "A  | |  A" +"                "+"A X| |  A\n"+
         "B s| |  B" +"                "+"B  | |  B\n"+
