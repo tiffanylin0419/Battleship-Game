@@ -194,7 +194,7 @@ public class TextPlayerTest {
   public void test_doPlacementPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player = createTextPlayer(10, 10,
-        "B2V\nB2V\nC9h\nC5H\nd7v\nd1h\nA4h\nA9v\nB8v\nH3H\nE0V\ni2h\n",
+        "B2V\nB2V\nC9h\nC5H\nd7v\nd1h\nA4h\nA9u\nB8u\nH3l\nE0u\ni2L\n",
         bytes);
     player.doPlacementPhase();
 

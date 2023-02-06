@@ -100,7 +100,7 @@ public class BattleShipBoardTest {
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
     Ship<Character> s2 = sf.makeDestroyer(new Placement("B3V"));
-    Ship<Character> s3 = sf.makeBattleship(new Placement("E1H"));
+    Ship<Character> s3 = sf.makeBattleship(new Placement("E1L"));
     b.tryAddShip(s1);
     b.tryAddShip(s2);
     b.tryAddShip(s3);
@@ -119,7 +119,7 @@ public class BattleShipBoardTest {
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
     Ship<Character> s2 = sf.makeDestroyer(new Placement("B3V"));
-    Ship<Character> s3 = sf.makeBattleship(new Placement("E1H"));
+    Ship<Character> s3 = sf.makeBattleship(new Placement("E1L"));
     b.tryAddShip(s1);
     b.tryAddShip(s2);
     b.tryAddShip(s3);

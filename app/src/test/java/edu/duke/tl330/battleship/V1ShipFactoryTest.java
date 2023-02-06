@@ -24,7 +24,7 @@ public class V1ShipFactoryTest {
     Ship<Character> s = f.makeSubmarine(v1_2);
     checkShip(s, "Submarine", 's', new Coordinate(1, 2), new Coordinate(2,2));
 
-    Placement v4_3 = new Placement(new Coordinate(4, 3), 'H');
+    Placement v4_3 = new Placement(new Coordinate(4, 3), 'L');
     Ship<Character> b = f.makeBattleship(v4_3);
     checkShip(b, "Battleship", 'b', new Coordinate(4, 3), new Coordinate(4, 4), new Coordinate(4, 5), new Coordinate(4, 6));
     Ship<Character> c = f.makeCarrier(v4_3);

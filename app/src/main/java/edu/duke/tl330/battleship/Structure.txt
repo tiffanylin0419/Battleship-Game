@@ -65,6 +65,8 @@ class V1ShipFactory implements AbstractShipFactory<Character>
 protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name)
 //override function
 
+
+
 abstract class PlacementRuleChecker<T>
 private final PlacementRuleChecker<T> next;
 constructor: (PlacementRuleChecker<T> next)
@@ -104,7 +106,7 @@ protected T whatIsAt(Coordinate where, boolean isSelf) {
 
 class BoardTextView
 final Board<Character> toDisplay
-BoardTextView(Board<Character> toDisplay) 
+constructor: (Board<Character> toDisplay) 
 String makeHeader() {
 public String displayEnemyBoard() {
 String displayMyOwnBoard()
@@ -125,7 +127,8 @@ final BufferedReader inputReader;
   final BoardTextView view;
   final String name;
   final AbstractShipFactory<Character> shipFactory;
-  final ArrayList<String> shipsToPlace;  final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+  final ArrayList<String> shipsToPlace;  
+final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
 Constructor: (String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
       AbstractShipFactory<Character> shipFactory)
 protected void setupShipCreationMap()

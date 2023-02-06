@@ -1,7 +1,11 @@
 package edu.duke.tl330.battleship;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class PlacementTest {
@@ -76,4 +80,16 @@ public class PlacementTest {
     assertThrows(IllegalArgumentException.class, () -> new Placement("f0f"));
   }
 
+  @Test
+  public void test_checkShipOrientation(){
+    Placement p1 = new Placement("A0V");
+    assertDoesNotThrow(()->p1.checkHVOrientation());
+    assertThrows(IllegalArgumentException.class,()->p1.checkUDLROrientation());
+    
+    Placement p2 = new Placement("b3u");
+    assertDoesNotThrow(()->p2.checkUDLROrientation());
+    assertThrows(IllegalArgumentException.class,()->p2.checkHVOrientation());
+
+    
+  }
 }

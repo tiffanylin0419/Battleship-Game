@@ -25,18 +25,21 @@ boolean isSunk()
 void recordHitAt(Coordinate where)
 boolean wasHitAt(Coordinate where);
 T getDisplayInfoAt(Coordinate where)
+ public Iterable<Coordinate> getCoordinates();
+
 
 abstract class BasicShip<T> implements Ship<T> 
 protected HashMap<Coordinate, Boolean> myPieces;
 protected ShipDisplayInfo<T> myDisplayInfo;
-Constructor: (Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo)
+protected ShipDisplayInfo<T> enemyDisplayInfo;
+Constructor:(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo)
 checkCoordinateInThisShip(Coordinate c)
 //override function
 
 Class RectangleShip<T> extends BasicShip<T>
 private final String name;
 String getName
-Constructor:(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo), (String name,Coordinate upperLeft, int width, int height, T data, T onHit), (Coordinate upperLeft, T data, T onHit) 
+Constructor:(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T>enemyDisplayInfo), (String name,Coordinate upperLeft, int width, int height, T data, T onHit), (Coordinate upperLeft, T data, T onHit) 
 static HashSet<Coordinate> makeCoords(Coordinate upperLeft, int width, int height)
 
 
@@ -62,6 +65,8 @@ class V1ShipFactory implements AbstractShipFactory<Character>
 protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name)
 //override function
 
+
+
 abstract class PlacementRuleChecker<T>
 private final PlacementRuleChecker<T> next;
 constructor: (PlacementRuleChecker<T> next)
@@ -80,28 +85,61 @@ Constructor: (PlacementRuleChecker<T> next)
 interface Board<T>
 int getWidth()
 int getHeight()
-boolean tryAddShip(Ship<T> toAdd)
-T whatIsAt(Coordinate where)
+public String tryAddShip(Ship<T> toAdd);
+public T whatIsAtForSelf(Coordinate where);
+public T whatIsAtForEnemy(Coordinate where);
+public Ship<T> fireAt(Coordinate c);
+public boolean noShips();
 
 class BattleShipBoard<T> implements Board<T>
 final int width
 final int height
 final ArrayList<Ship<T>> myShips
 private final PlacementRuleChecker<T> placementChecker;
+private HashSet<Coordinate> enemyMisses;
+final T missInfo;
 //override function
-Constructor: (int w, int h)(int w, int h, PlacementRuleChecker<T> placementChecker)
+Constructor: (int w, int h, missInfo)(int w, int h, PlacementRuleChecker<T> placementChecker, missInfo)
+protected T whatIsAt(Coordinate where, boolean isSelf) {
+
 
 
 class BoardTextView
 final Board<Character> toDisplay
-BoardTextView(Board<Character> toDisplay) 
+constructor: (Board<Character> toDisplay) 
+String makeHeader() {
+public String displayEnemyBoard() {
 String displayMyOwnBoard()
-
-
-
+protected String displayAnyBoard(Function<Coordinate, Character> getSquareFn) {
+public String displayMyBoardWithEnemyNextToIt(BoardTextView enemyView, String myHeader, String enemyHeader) {
 
 App
-TextPlayer setupShipCreationMap& setupShipCreationListfunction difficult
+Constructor: (TextPlayer player1, TextPlayer player2)
+public void doPlacementPhase() throws IOException {
+public void doAttackingPhase() throws IOException {
+public static void main(String[] args) throws IOException {
+
+
+public class TextPlayer {
+final BufferedReader inputReader;
+  final PrintStream out;
+  final Board<Character> theBoard;
+  final BoardTextView view;
+  final String name;
+  final AbstractShipFactory<Character> shipFactory;
+  final ArrayList<String> shipsToPlace;  
+final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+Constructor: (String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
+      AbstractShipFactory<Character> shipFactory)
+protected void setupShipCreationMap()
+protected void setupShipCreationList() 
+public Placement readPlacement(String prompt) throws IOException {
+public Coordinate readCoordinate() throws IOException {
+public void doOnePlacement() throws IOException {
+public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
+public void doPlacementPhase() throws IOException {
+public void playOneTurn(TextPlayer enemy) throws IOException {
+
 
 
 
