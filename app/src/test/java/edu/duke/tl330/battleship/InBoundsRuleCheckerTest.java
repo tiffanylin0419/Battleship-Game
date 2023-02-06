@@ -9,8 +9,8 @@ public class InBoundsRuleCheckerTest {
   public void test_checkMyRule() {
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
-    Ship<Character> s2 = sf.makeBattleship(new Placement("E6U"));
-    Ship<Character> s3 = sf.makeCarrier(new Placement("A1L"));
+    Ship<Character> s2 = sf.makeBattleship(new Placement("E4D"));
+    Ship<Character> s3 = sf.makeCarrier(new Placement("A0u"));
 
     Ship<Character> s4 = sf.makeDestroyer(new Placement("A5H"));
     Ship<Character> s5 = sf.makeSubmarine(new Placement("A6H"));

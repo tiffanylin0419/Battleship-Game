@@ -72,9 +72,10 @@ public class TextPlayerTest {
   void test_do_one_placement_error() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player = createTextPlayer(10, 10, "B9h\nd9h\n", bytes);
-    //player.doOnePlacement();
-    //String expected = "Player A where do you want to place a Destroyer?\nThat placement is invalid: the ship goes off the right of the board.\n";
-    assertThrows(EOFException.class,()->player.doOnePlacement());
+    // player.doOnePlacement();
+    // String expected = "Player A where do you want to place a Destroyer?\nThat
+    // placement is invalid: the ship goes off the right of the board.\n";
+    assertThrows(EOFException.class, () -> player.doOnePlacement());
   }
 
   @Test
@@ -194,7 +195,7 @@ public class TextPlayerTest {
   public void test_doPlacementPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player = createTextPlayer(10, 10,
-        "B2V\nB2V\nC9h\nC5H\nd7v\nd1h\nA4h\nA9u\nB8u\nH3l\nE0u\ni2L\n",
+        "B2V\nB2V\nC9h\nC5H\nd7v\nd1h\nA4h\nd3u\na3r\ne8l\nf0u\nf3l\nh5R\n",
         bytes);
     player.doPlacementPhase();
 
@@ -229,9 +230,9 @@ public class TextPlayerTest {
         "Player A where do you want to place a Submarine?\n" +
         "That placement is invalid: the ship overlaps another ship.\n" +
         "Player A where do you want to place a Submarine?\n" +
-      "That placement is invalid: the ship goes off the right of the board.\n" +
-       "Player A where do you want to place a Submarine?\n" +
-      expectedHeader +
+        "That placement is invalid: the ship goes off the right of the board.\n" +
+        "Player A where do you want to place a Submarine?\n" +
+        expectedHeader +
         "A  | | | | | | | | |  A\n" +
         "B  | |s| | | | | | |  B\n" +
         "C  | |s| | |s|s| | |  C\n" +
@@ -284,11 +285,11 @@ public class TextPlayerTest {
         expectedHeader +
         "Player A where do you want to place a Battleship?\n" +
         expectedHeader +
-        "A  | | | |d|d|d| | |b A\n" +
-        "B  | |s| | | | | | |b B\n" +
-        "C  | |s| | |s|s| | |b C\n" +
-        "D  |d|d|d| | | |d| |b D\n" +
-        "E  | | | | | | |d| |  E\n" +
+        "A  | | | |d|d|d| | |  A\n" +
+        "B  | |s| | | | | | |  B\n" +
+        "C  | |s| | |s|s| | |  C\n" +
+        "D  |d|d|d|b| | |d| |  D\n" +
+        "E  | | |b|b|b| |d| |  E\n" +
         "F  | | | | | | |d| |  F\n" +
         "G  | | | | | | | | |  G\n" +
         "H  | | | | | | | | |  H\n" +
@@ -297,11 +298,11 @@ public class TextPlayerTest {
         expectedHeader +
         "Player A where do you want to place a Battleship?\n" +
         expectedHeader +
-        "A  | | | |d|d|d| | |b A\n" +
-        "B  | |s| | | | | |b|b B\n" +
-        "C  | |s| | |s|s| |b|b C\n" +
-        "D  |d|d|d| | | |d|b|b D\n" +
-        "E  | | | | | | |d|b|  E\n" +
+        "A  | | |b|d|d|d| | |  A\n" +
+        "B  | |s|b|b| | | | |  B\n" +
+        "C  | |s|b| |s|s| | |  C\n" +
+        "D  |d|d|d|b| | |d| |  D\n" +
+        "E  | | |b|b|b| |d| |  E\n" +
         "F  | | | | | | |d| |  F\n" +
         "G  | | | | | | | | |  G\n" +
         "H  | | | | | | | | |  H\n" +
@@ -310,43 +311,45 @@ public class TextPlayerTest {
         expectedHeader +
         "Player A where do you want to place a Battleship?\n" +
         expectedHeader +
-        "A  | | | |d|d|d| | |b A\n" +
-        "B  | |s| | | | | |b|b B\n" +
-        "C  | |s| | |s|s| |b|b C\n" +
-        "D  |d|d|d| | | |d|b|b D\n" +
-        "E  | | | | | | |d|b|  E\n" +
-        "F  | | | | | | |d| |  F\n" +
-        "G  | | | | | | | | |  G\n" +
-        "H  | | |b|b|b|b| | |  H\n" +
+        "A  | | |b|d|d|d| | |  A\n" +
+        "B  | |s|b|b| | | | |  B\n" +
+        "C  | |s|b| |s|s| | |  C\n" +
+        "D  |d|d|d|b| | |d| |  D\n" +
+        "E  | | |b|b|b| |d| |b E\n" +
+        "F  | | | | | | |d|b|b F\n" +
+        "G  | | | | | | | | |b G\n" +
+        "H  | | | | | | | | |  H\n" +
         "I  | | | | | | | | |  I\n" +
         "J  | | | | | | | | |  J\n" +
         expectedHeader +
         "Player A where do you want to place a Carrier?\n" +
         expectedHeader +
-        "A  | | | |d|d|d| | |b A\n" +
-        "B  | |s| | | | | |b|b B\n" +
-        "C  | |s| | |s|s| |b|b C\n" +
-        "D  |d|d|d| | | |d|b|b D\n" +
-        "E c| | | | | | |d|b|  E\n" +
-        "F c| | | | | | |d| |  F\n" +
-        "G c| | | | | | | | |  G\n" +
-        "H c| | |b|b|b|b| | |  H\n" +
-        "I c| | | | | | | | |  I\n" +
-        "J c| | | | | | | | |  J\n" +
+        "A  | | |b|d|d|d| | |  A\n" +
+        "B  | |s|b|b| | | | |  B\n" +
+        "C  | |s|b| |s|s| | |  C\n" +
+        "D  |d|d|d|b| | |d| |  D\n" +
+        "E  | | |b|b|b| |d| |b E\n" +
+        "F c| | | | | | |d|b|b F\n" +
+        "G c| | | | | | | | |b G\n" +
+        "H c|c| | | | | | | |  H\n" +
+        "I c|c| | | | | | | |  I\n" +
+        "J  |c| | | | | | | |  J\n" +
         expectedHeader +
+        "Player A where do you want to place a Carrier?\n" +
+        "That placement is invalid: the ship overlaps another ship.\n" +
         "Player A where do you want to place a Carrier?\n" +
         expectedHeader +
 
-        "A  | | | |d|d|d| | |b A\n" +
-        "B  | |s| | | | | |b|b B\n" +
-        "C  | |s| | |s|s| |b|b C\n" +
-        "D  |d|d|d| | | |d|b|b D\n" +
-        "E c| | | | | | |d|b|  E\n" +
-        "F c| | | | | | |d| |  F\n" +
-        "G c| | | | | | | | |  G\n" +
-        "H c| | |b|b|b|b| | |  H\n" +
-        "I c| |c|c|c|c|c|c| |  I\n" +
-        "J c| | | | | | | | |  J\n" +
+        "A  | | |b|d|d|d| | |  A\n" +
+        "B  | |s|b|b| | | | |  B\n" +
+        "C  | |s|b| |s|s| | |  C\n" +
+        "D  |d|d|d|b| | |d| |  D\n" +
+        "E  | | |b|b|b| |d| |b E\n" +
+        "F c| | | | | | |d|b|b F\n" +
+        "G c| | | | | | | | |b G\n" +
+        "H c|c| | | | |c|c|c|c H\n" +
+        "I c|c| | | |c|c|c| |  I\n" +
+        "J  |c| | | | | | | |  J\n" +
         expectedHeader;
 
     assertEquals(expected, bytes.toString());

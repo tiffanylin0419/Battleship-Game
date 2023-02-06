@@ -30,10 +30,10 @@ public class RectangleShip<T> extends BasicShip<T> {
   // return the coords where the ship occupies
   static HashSet<Coordinate> makeCoords(Coordinate upperLeft, int width, int height) {
     HashSet<Coordinate> coords = new HashSet<Coordinate>();
+    int r = upperLeft.getRow();
+    int c = upperLeft.getColumn();
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
-        int r = upperLeft.getRow();
-        int c = upperLeft.getColumn();
         coords.add(new Coordinate(r + j, c + i));
       }
     }

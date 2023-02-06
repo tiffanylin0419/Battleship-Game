@@ -100,7 +100,7 @@ public class BattleShipBoardTest {
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
     Ship<Character> s2 = sf.makeDestroyer(new Placement("B3V"));
-    Ship<Character> s3 = sf.makeBattleship(new Placement("E1L"));
+    Ship<Character> s3 = sf.makeBattleship(new Placement("B1L"));
     b.tryAddShip(s1);
     b.tryAddShip(s2);
     b.tryAddShip(s3);
@@ -110,7 +110,7 @@ public class BattleShipBoardTest {
     test_noHit(s3);
     test_hit(b, s1, b.fireAt(new Coordinate(0, 0)));
     test_hit(b, s2, b.fireAt(new Coordinate(3, 3)));
-    test_hit(b, s3, b.fireAt(new Coordinate(4, 2)));
+    test_hit(b, s3, b.fireAt(new Coordinate(3, 2)));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class BattleShipBoardTest {
     V1ShipFactory sf = new V1ShipFactory();
     Ship<Character> s1 = sf.makeSubmarine(new Placement("A0H"));
     Ship<Character> s2 = sf.makeDestroyer(new Placement("B3V"));
-    Ship<Character> s3 = sf.makeBattleship(new Placement("E1L"));
+    Ship<Character> s3 = sf.makeBattleship(new Placement("B1L"));
     b.tryAddShip(s1);
     b.tryAddShip(s2);
     b.tryAddShip(s3);
@@ -128,7 +128,7 @@ public class BattleShipBoardTest {
 
     b.fireAt(new Coordinate(0, 0));
       b.fireAt(new Coordinate(3, 3));
-      b.fireAt(new Coordinate(4, 2));
+      b.fireAt(new Coordinate(3, 2));
     assertTrue(b.noShips());  
   }
 
