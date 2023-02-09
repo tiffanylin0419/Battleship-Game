@@ -38,6 +38,7 @@ class AppTest {
     assertEquals('F', c);
   }
 
+  //add different actio
   @Test
   public void test_doAttackingPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();

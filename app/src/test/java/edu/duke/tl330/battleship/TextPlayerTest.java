@@ -114,14 +114,14 @@ public class TextPlayerTest {
   public void test_doOneAction() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player1 = createTextPlayer(5, 5, "F\nC3\nC5\n", bytes);
-    TextPlayer player2 = createTextPlayer(5, 5, "A3U\nm\na0\nd4\nd1r\nd0R\ns\nE4\ns\nm\nd4\na2u\nm\nf\na0\n", bytes);
+    TextPlayer player2 = createTextPlayer(5, 5, "A3U\nm\na0\nm\nd4\nd1r\nm\nd4\nd0R\ns\nE4\ns\nm\nd4\na2u\nm\nf\na0\n", bytes);
 
     player2.doOnePlacement("Carrier", player2.shipCreationFns.get("Carrier"));
     player2.doOneAction(player1);
-    player2.doOneAction(player1);
-    player2.doOneAction(player1);
-    player2.doOneAction(player1);
-    String expectedHeader = "  0|1|2|3|4";
+        player2.doOneAction(player1);
+        player2.doOneAction(player1);
+        player2.doOneAction(player1);
+        String expectedHeader = "  0|1|2|3|4";
     String expected = "Player A where do you want to place a Carrier?\n" +
         expectedHeader + "\n" +
         "A  | | |c|  A\n" +
@@ -131,33 +131,12 @@ public class TextPlayerTest {
         "E  | | | |c E\n" +
         expectedHeader + "\n" +
    "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (2 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n"+
-      "No ship at this position.\n"+
-      "Player A where do you want to move the Carrier?\n" +
-      "That placement is invalid: the ship goes off the right of the board.\n"+
-      "Player A where do you want to move the Carrier?\n" +
-      "Player A's turn:\n" +
-        "     Your ocean                           Player A's ocean\n" +
-        expectedHeader + "                  " + expectedHeader + "\n" +
-        "A  | | | |  A                A  | | | |  A\n" +
-        "B  | | | |  B                B  | | | |  B\n" +
-        "C  | | | |  C                C  | | | |  C\n" +
-        "D  |c|c|c|c D                D  | | | |  D\n" +
-        "E c|c|c| |  E                E  | | | |  E\n" +
-        expectedHeader + "                  " + expectedHeader + "\n"+
-      "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (1 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n"+
+      "\n\n"+
+       "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (1 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n"+
       "Submarines occupy 0 squares\nDestroyers occupy 0 squares\nBattleships occupy 0 squares\nCarriers occupy 5 squares\n"+
       "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (1 remaining)\n S Sonar scan (0 remaining)\n\nPlayer A, what would you like to do?\n"+
        "No more scans.\n"+
-      "Player A where do you want to move the Carrier?\n" +
-      "Player A's turn:\n" +
-      "     Your ocean                           Player A's ocean\n" +
-      expectedHeader + "                  " + expectedHeader + "\n" +
-      "A  | |c| |  A                A  | | | |  A\n" +
-      "B  | |c| |  B                B  | | | |  B\n" +
-      "C  | |c|c|  C                C  | | | |  C\n" +
-      "D  | |c|c|  D                D  | | | |  D\n" +
-      "E  | | |c|  E                E  | | | |  E\n" +
-      expectedHeader + "                  " + expectedHeader + "\n"+
+      "\n"+
       "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (0 remaining)\n S Sonar scan (0 remaining)\n\nPlayer A, what would you like to do?\n"+
       "No more moves.\n"+
       "Player A's turn:\n" +
@@ -172,9 +151,7 @@ public class TextPlayerTest {
       "You missed!\n";
       
     assertEquals(expected, bytes.toString());
-    //String s1=expected.substring(1200,1250);
-    //String s2= bytes.toString().substring(1200,1250);
-    //assertEquals(s1,s2);
+        
   }
 
   @Test

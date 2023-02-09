@@ -15,16 +15,20 @@ public class ActionCount {
   
   public boolean canScan(){
     if(scan>0){
-      scan-=1;
       return true;
     }
     return false;
   }
   public boolean canMove(){
     if(move>0){
-      move-=1;
       return true;
     }
     return false;
+  }
+  public void doScan(){
+    scan-=1;
+  }
+  public void doMove(){
+    move-=1;
   }
 }

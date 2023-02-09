@@ -19,6 +19,7 @@ public class TextPlayer {
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
   final ActionCount action;
+  final boolean isHuman;
 
   // constructor
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
@@ -34,6 +35,7 @@ public class TextPlayer {
     setupShipCreationMap();
     setupShipCreationList();
     this.action = new ActionCount();
+    this.isHuman = true;
   }
 
   protected void setupShipCreationMap() {
@@ -71,7 +73,7 @@ public class TextPlayer {
   }
 
   public char readAction(String prompt) throws IOException {
-    out.println(prompt);
+    out.print(prompt);
     String s = inputReader.readLine();
     if (s == null) {
       throw new EOFException("No input.\n");
@@ -80,7 +82,7 @@ public class TextPlayer {
       if (s.equals("F") || s.equals("M") || s.equals("S")) {
         return s.charAt(0);
       } else {
-        return readAction("Input must be F, M or S");
+        return readAction("Input must be F, M or S\n");
       }
     }
   }
@@ -89,24 +91,29 @@ public class TextPlayer {
     char act = readAction("Possible actions for Player " + name
         + ":\n\n F Fire at a square\n M Move a ship to another square (" + action.getMove()
         + " remaining)\n S Sonar scan (" + action.getScan() + " remaining)\n\nPlayer "
-        + name + ", what would you like to do?");
+        + name + ", what would you like to do?\n");
     while (true) {
       if (act == 'F') {
         playOneTurn(enemy);
         return;
       } else if (act == 'M') {
         if (action.canMove()) {
-          doMove(enemy);
+          if (doMove(enemy) == false) {
+            act = readAction("");
+            continue;
+          }
+          action.doMove();
           return;
         } else {
-          act = readAction("No more moves.");
+          act = readAction("No more moves.\n");
         }
       } else {// 'S'
         if (action.canScan()) {
           doScan();
+          action.doScan();
           return;
         } else {
-          act = readAction("No more scans.");
+          act = readAction("No more scans.\n");
         }
       }
     }
@@ -127,7 +134,6 @@ public class TextPlayer {
       error = theBoard.tryAddShip(s1);
     }
     out.println(view.displayMyOwnBoard());
-
   }
 
   // called with
@@ -173,27 +179,22 @@ public class TextPlayer {
     }
   }
 
-  public void doMove(TextPlayer enemy) throws IOException {
+  public boolean doMove(TextPlayer enemy) throws IOException {
     Coordinate c = readCoordinate();
 
     Ship<Character> oldShip = theBoard.getShipAt(c);
-    while (oldShip == null) {
-      out.println("No ship at this position.");
-      c = readCoordinate();
-      oldShip = theBoard.getShipAt(c);
+    if (oldShip == null) {
+      return false;
     }
 
-    Placement p = readPlacement("Player " + name + " where do you want to move the " + oldShip.getName() + "?");
-
+    Placement p = readPlacement("");
     Ship<Character> newShip = shipCreationFns.get(oldShip.getName()).apply(p);
-    String error = theBoard.tryMoveShip(oldShip, newShip);
-    while (error != null) {
-      out.println(error);
-      p = readPlacement("Player " + name + " where do you want to move the " + oldShip.getName() + "?");
-      newShip = shipCreationFns.get(oldShip.getName()).apply(p);
-      error = theBoard.tryMoveShip(oldShip, newShip);
+    if (theBoard.tryMoveShip(oldShip, newShip) != null) {
+      return false;
     }
-    out.print(view.displayMyBoardWithEnemyNextToIt(view, name, enemy.name));
+
+    // out.print(view.displayMyBoardWithEnemyNextToIt(view, name, enemy.name));
+    return true;
   }
 
   public void doScan() throws IOException {
