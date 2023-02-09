@@ -18,6 +18,7 @@ public class TextPlayer {
   final AbstractShipFactory<Character> shipFactory;
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+  final ActionCount action;
 
   // constructor
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
@@ -32,6 +33,7 @@ public class TextPlayer {
     this.shipCreationFns = new HashMap<String, Function<Placement, Ship<Character>>>();
     setupShipCreationMap();
     setupShipCreationList();
+    this.action = new ActionCount();
   }
 
   protected void setupShipCreationMap() {
@@ -68,6 +70,48 @@ public class TextPlayer {
     return new Coordinate(s);
   }
 
+  public char readAction(String prompt) throws IOException {
+    out.println(prompt);
+    String s = inputReader.readLine();
+    if (s == null) {
+      throw new EOFException("No input.\n");
+    } else {
+      s = s.toUpperCase();
+      if (s.equals("F") || s.equals("M") || s.equals("S")) {
+        return s.charAt(0);
+      } else {
+        return readAction("Input must be F, M or S");
+      }
+    }
+  }
+
+  public void doOneAction(TextPlayer enemy) throws IOException {
+    char act = readAction("Possible actions for Player " + name
+        + ":\n\n F Fire at a square\n M Move a ship to another square (" + action.getMove()
+        + " remaining)\n S Sonar scan (" + action.getScan() + " remaining)\n\nPlayer "
+        + name + ", what would you like to do?");
+    while (true) {
+      if (act == 'F') {
+        playOneTurn(enemy);
+        return;
+      } else if (act == 'M') {
+        if (action.canMove()) {
+          doMove(enemy);
+          return;
+        } else {
+          act = readAction("No more moves.");
+        }
+      } else {// 'S'
+        if (action.canScan()) {
+          doScan();
+          return;
+        } else {
+          act = readAction("No more scans.");
+        }
+      }
+    }
+  }
+
   // read input
   // place one whip and print board
   public void doOnePlacement() throws IOException {
@@ -81,8 +125,9 @@ public class TextPlayer {
       p = readPlacement("Player " + name + " where do you want to place a Destroyer?");
       Ship<Character> s1 = shipFactory.makeDestroyer(p);
       error = theBoard.tryAddShip(s1);
-    }  out.println(view.displayMyOwnBoard());
-    
+    }
+    out.println(view.displayMyOwnBoard());
+
   }
 
   // called with
@@ -94,11 +139,12 @@ public class TextPlayer {
     String error = theBoard.tryAddShip(s);
     while (error != null) {
       out.println(error);
-      p = readPlacement("Player " + name +" where do you want to place a " + shipName + "?");
+      p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
       s = createFn.apply(p);
       error = theBoard.tryAddShip(s);
-    }  out.print(view.displayMyOwnBoard());
-    
+    }
+    out.print(view.displayMyOwnBoard());
+
   }
 
   // print empty board
@@ -127,4 +173,35 @@ public class TextPlayer {
     }
   }
 
+  public void doMove(TextPlayer enemy) throws IOException {
+    Coordinate c = readCoordinate();
+
+    Ship<Character> oldShip = theBoard.getShipAt(c);
+    while (oldShip == null) {
+      out.println("No ship at this position.");
+      c = readCoordinate();
+      oldShip = theBoard.getShipAt(c);
+    }
+
+    Placement p = readPlacement("Player " + name + " where do you want to move the " + oldShip.getName() + "?");
+
+    Ship<Character> newShip = shipCreationFns.get(oldShip.getName()).apply(p);
+    String error = theBoard.tryMoveShip(oldShip, newShip);
+    while (error != null) {
+      out.println(error);
+      p = readPlacement("Player " + name + " where do you want to move the " + oldShip.getName() + "?");
+      newShip = shipCreationFns.get(oldShip.getName()).apply(p);
+      error = theBoard.tryMoveShip(oldShip, newShip);
+    }
+    out.print(view.displayMyBoardWithEnemyNextToIt(view, name, enemy.name));
+  }
+
+  public void doScan() throws IOException {
+
+    Coordinate c = readCoordinate();
+    out.println("Submarines occupy " + theBoard.scanFor(c, 's') + " squares");
+    out.println("Destroyers occupy " + theBoard.scanFor(c, 'd') + " squares");
+    out.println("Battleships occupy " + theBoard.scanFor(c, 'b') + " squares");
+    out.println("Carriers occupy " + theBoard.scanFor(c, 'c') + " squares");
+  }
 }

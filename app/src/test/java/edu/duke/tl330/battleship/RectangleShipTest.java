@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -73,20 +74,20 @@ public class RectangleShipTest {
   @Test
   public void test_getDisplayInfoAt() {
     RectangleShip<Character> rs = new RectangleShip<Character>("submarine", new Coordinate(1, 2), 3, 1, 's', '*');
-    //self
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),true), 's');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3),true), 's');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4),true), 's');
+    // self
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2), true), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3), true), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4), true), 's');
     rs.recordHitAt(new Coordinate(1, 3));
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),true), 's');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3),true), '*');
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4),true), 's');
-    assertThrows(IllegalArgumentException.class, () -> rs.getDisplayInfoAt(new Coordinate(3, 3),true));
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2), true), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 3), true), '*');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 4), true), 's');
+    assertThrows(IllegalArgumentException.class, () -> rs.getDisplayInfoAt(new Coordinate(3, 3), true));
 
-    //enemy
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),false), null);
+    // enemy
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2), false), null);
     rs.recordHitAt(new Coordinate(1, 2));
-    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2),false), 's');
+    assertEquals(rs.getDisplayInfoAt(new Coordinate(1, 2), false), 's');
   }
 
   private void checkCoord(Ship<Character> testShip, Coordinate... expectedLocs) {
@@ -97,9 +98,28 @@ public class RectangleShipTest {
   @Test
   public void test_getCoordinates() {
     RectangleShip<Character> rs1 = new RectangleShip<Character>("submarine", new Coordinate(1, 2), 3, 1, 's', '*');
-    checkCoord(rs1,new Coordinate(1, 2),new Coordinate(1, 3),new Coordinate(1, 4));
+    checkCoord(rs1, new Coordinate(1, 2), new Coordinate(1, 3), new Coordinate(1, 4));
     RectangleShip<Character> rs2 = new RectangleShip<Character>("submarine", new Coordinate(5, 4), 1, 4, 's', '*');
-    checkCoord(rs2,new Coordinate(5, 4),new Coordinate(6, 4),new Coordinate(7, 4),new Coordinate(8, 4));
-    
+    checkCoord(rs2, new Coordinate(5, 4), new Coordinate(6, 4), new Coordinate(7, 4), new Coordinate(8, 4));
+
+  }
+
+  @Test
+  public void test_makeOffset_width() {
+    ArrayList<Coordinate> cc = new ArrayList<Coordinate>();
+    cc.add(new Coordinate(0, 0));
+    cc.add(new Coordinate(0, 1));
+    cc.add(new Coordinate(0, 2));
+    assertEquals(cc, RectangleShip.makeOffset(new Coordinate(2, 5), 3, 1));
+  }
+
+  @Test
+  public void test_makeOffset_height() {
+    ArrayList<Coordinate> cc = new ArrayList<Coordinate>();
+    cc.add(new Coordinate(0, 0));
+    cc.add(new Coordinate(1, 0));
+    cc.add(new Coordinate(2, 0));
+     cc.add(new Coordinate(3, 0));
+    assertEquals(cc, RectangleShip.makeOffset(new Coordinate(2, 5), 1, 4));
   }
 }

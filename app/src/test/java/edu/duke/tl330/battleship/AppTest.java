@@ -22,46 +22,55 @@ import org.junit.jupiter.api.parallel.Resources;
 
 class AppTest {
 
-   private TextPlayer createTextPlayer(int w, int h, String inputData, OutputStream bytes) {
-     BufferedReader input = new BufferedReader(new StringReader(inputData));
-     PrintStream output = new PrintStream(bytes, true);
-     Board<Character> board = new BattleShipBoard<Character>(w, h, 'X');
-     V1ShipFactory shipFactory = new V1ShipFactory();
-     return new TextPlayer("A", board, input, output, shipFactory);
-   }
-  
+  private TextPlayer createTextPlayer(int w, int h, String inputData, OutputStream bytes) {
+    BufferedReader input = new BufferedReader(new StringReader(inputData));
+    PrintStream output = new PrintStream(bytes, true);
+    Board<Character> board = new BattleShipBoard<Character>(w, h, 'X');
+    V1ShipFactory shipFactory = new V1ShipFactory();
+    return new TextPlayer("A", board, input, output, shipFactory);
+  }
+
+  @Test
+  public void test_readAction() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer p3 = createTextPlayer(3, 2, "F\nF\na1\nF\na1\nF\na2\n", bytes);
+    char c = p3.readAction("");
+    assertEquals('F', c);
+  }
+
   @Test
   public void test_doAttackingPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    TextPlayer p1=createTextPlayer(3, 2, "A0h\na1\na1\na2\n", bytes);
-    TextPlayer p2=createTextPlayer(3, 2, "A0h\nb1\na2\n", bytes);
-    App a=new App(p1,p2);
+    TextPlayer p1 = createTextPlayer(3, 2, "A0h\nB\nF\na1\nF\na1\nF\na2\n", bytes);
+    TextPlayer p2 = createTextPlayer(3, 2, "A0h\nF\nb1\nF\na2\n", bytes);
+    App a = new App(p1, p2);
     p1.doOnePlacement();
     p2.doOnePlacement();
     a.doAttackingPhase();
-    String expected="Player A where do you want to place a Destroyer?\n"+
-      "  0|1|2\n"+
-      "A d|d|d A\n"+
-      "B  | |  B\n"+
-      "  0|1|2\n\n"+
-      "Player A where do you want to place a Destroyer?\n"+
-      "  0|1|2\n"+
-      "A d|d|d A\n"+
-      "B  | |  B\n"+
-      "  0|1|2\n\n"+
-      "Player A's turn:\n"+
-      "     Your ocean                           Player A's ocean\n"+
-      "  0|1|2                    0|1|2\n"+
-      "A d|d|d A                A  | |  A\n"+
-      "B  | |  B                B  | |  B\n"+
-      "  0|1|2                    0|1|2\n"+
-      "You hit a destroyer!\n"+
-      "Player A win. Player A lose.\n"
-      
-      
+    String expected = "Player A where do you want to place a Destroyer?\n" +
+        "  0|1|2\n" +
+        "A d|d|d A\n" +
+        "B  | |  B\n" +
+        "  0|1|2\n\n" +
+        "Player A where do you want to place a Destroyer?\n" +
+        "  0|1|2\n" +
+        "A d|d|d A\n" +
+        "B  | |  B\n" +
+        "  0|1|2\n\n" +
+        "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (2 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n"
+        +
+        "Input must be F, M or S\n" +
+        "Player A's turn:\n" +
+        "     Your ocean                           Player A's ocean\n" +
+        "  0|1|2                    0|1|2\n" +
+        "A d|d|d A                A  | |  A\n" +
+        "B  | |  B                B  | |  B\n" +
+        "  0|1|2                    0|1|2\n" +
+        "You hit a destroyer!\n" +
+        "Player A win. Player A lose.\n"
 
-      ;
-    assertEquals(expected,bytes.toString());
+    ;
+    assertEquals(expected, bytes.toString());
   }
 
   @Disabled
@@ -89,5 +98,4 @@ class AppTest {
     assertEquals(expected, actual);
   }
 
-  
 }

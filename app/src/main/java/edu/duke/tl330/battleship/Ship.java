@@ -1,11 +1,18 @@
 package edu.duke.tl330.battleship;
 
+import java.util.ArrayList;
+
 /**
  * This interface represents any type of Ship in our Battleship game. It is
  * generic in typename T, which is the type of information the view needs to
  * display this ship.
  */
 public interface Ship<T> {
+
+  
+  public Coordinate getUpperLeft();
+
+  public ArrayList<Coordinate> getOffset();
   /**
    * Check if this ship occupies the given coordinate.
    * 

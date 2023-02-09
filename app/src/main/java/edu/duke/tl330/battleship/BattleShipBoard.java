@@ -1,6 +1,7 @@
 package edu.duke.tl330.battleship;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -11,7 +12,7 @@ public class BattleShipBoard<T> implements Board<T> {
   private final int height;
   private final ArrayList<Ship<T>> myShips;
   private final PlacementRuleChecker<T> placementChecker;
-  private HashSet<Coordinate> enemyMisses;
+  private HashMap<Coordinate, T> enemyDisguise;
   final T missInfo;
 
   @Override
@@ -58,7 +59,12 @@ public class BattleShipBoard<T> implements Board<T> {
     this.height = h;
     this.myShips = new ArrayList<Ship<T>>();
     this.placementChecker = placementChecker;
-    this.enemyMisses = new HashSet<Coordinate>();
+    this.enemyDisguise = new HashMap<Coordinate, T>();
+    for(int i=0;i<width;i++){
+      for(int j=0;j<height;j++){
+        this.enemyDisguise.put(new Coordinate(i,j),null);
+      }
+    }
     this.missInfo = missInfo;
   }
 
@@ -71,6 +77,46 @@ public class BattleShipBoard<T> implements Board<T> {
     return s;
   }
 
+  @Override
+  public String tryMoveShip(Ship<T> oldShip, Ship<T> newShip) {
+    myShips.remove(oldShip);
+    String s = placementChecker.checkPlacement(newShip, this);
+    if (s == null) {
+      int r_new = newShip.getUpperLeft().getRow();
+      int c_new = newShip.getUpperLeft().getColumn();
+      int r_old = oldShip.getUpperLeft().getRow();
+      int c_old = oldShip.getUpperLeft().getColumn();
+      for (int i = 0; i < oldShip.getOffset().size(); i++) {
+        if (oldShip.wasHitAt(new Coordinate(r_old + oldShip.getOffset().get(i).getRow(),
+            c_old + oldShip.getOffset().get(i).getColumn()))) {
+          newShip.recordHitAt(new Coordinate(r_new + newShip.getOffset().get(i).getRow(),
+              c_new + newShip.getOffset().get(i).getColumn()));
+        }
+      }
+      myShips.add(newShip);
+      return s;
+    }
+    myShips.add(oldShip);
+    return s;
+  }
+  
+  @Override
+  public int scanFor(Coordinate coord,T ch){
+    int count=0;
+    for(int i=-3;i<=3;i++){
+      for(int j=-3;j<=3;j++){
+        if(Math.abs(i)+Math.abs(j)<=3){
+          Coordinate c=new Coordinate(coord.getRow()+i,coord.getColumn()+j);
+          Ship<T> s=getShipAt(c);
+          if(s!=null &&( s.getDisplayInfoAt(c, true)==ch||s.getDisplayInfoAt(c, false)==ch)){
+            count+=1;
+          }
+        }
+      }
+    }
+    return count;
+  }
+  
   /**
    * @param takes a Coordinate,
    *              sees which (if any) Shipvoccupies that coordinate.
@@ -89,7 +135,7 @@ public class BattleShipBoard<T> implements Board<T> {
 
   }
 
-  //true if all ship is sunk
+  // true if all ship is sunk
   @Override
   public boolean noShips() {
     for (Ship<T> i : myShips) {
@@ -101,26 +147,39 @@ public class BattleShipBoard<T> implements Board<T> {
   }
 
   protected T whatIsAt(Coordinate where, boolean isSelf) {
+    if (isSelf == false) {
+      if (enemyDisguise.containsKey(where)) {
+        return enemyDisguise.get(where);
+      }
+    }
     for (Ship<T> s : myShips) {
       if (s.occupiesCoordinates(where)) {
         return s.getDisplayInfoAt(where, isSelf);
       }
     }
-    if (isSelf == false && enemyMisses.contains(where)) {
-      return missInfo;// 'X'
-    }
     return null;
   }
-  
+
   @Override
   public Ship<T> fireAt(Coordinate c) {
+    Ship<T> s = getShipAt(c);
+    if (s != null) {
+      s.recordHitAt(c);
+      enemyDisguise.put(c, s.getDisplayInfoAt(c, false));
+    } else {
+       enemyDisguise.put(c, missInfo);
+    }
+    return s;
+  }
+
+  @Override
+  public Ship<T> getShipAt(Coordinate c) {
     for (Ship<T> s : myShips) {
       if (s.occupiesCoordinates(c)) {
-        s.recordHitAt(c);
         return s;
       }
     }
-    enemyMisses.add(c);
     return null;
   }
+
 }

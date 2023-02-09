@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class BattleShipBoardTest {
@@ -123,13 +124,62 @@ public class BattleShipBoardTest {
     b.tryAddShip(s1);
     b.tryAddShip(s2);
     b.tryAddShip(s3);
-    
+
     assertFalse(b.noShips());
 
     b.fireAt(new Coordinate(0, 0));
-      b.fireAt(new Coordinate(3, 3));
-      b.fireAt(new Coordinate(3, 2));
-    assertTrue(b.noShips());  
+    b.fireAt(new Coordinate(3, 3));
+    b.fireAt(new Coordinate(3, 2));
+    assertTrue(b.noShips());
   }
 
+  @Test
+  public void test_tryMoveShip() {
+    BattleShipBoard<Character> b = new BattleShipBoard<Character>(5, 5, 'X');
+    V1ShipFactory sf = new V1ShipFactory();
+    Ship<Character> s1 = sf.makeBattleship(new Placement("A0U"));
+    b.tryAddShip(s1);
+    b.fireAt(new Coordinate(1, 1));
+
+    Ship<Character> s2 = sf.makeBattleship(new Placement("B1R"));
+    assertEquals(null, b.tryMoveShip(s1, s2));
+    Character[][] arr_self = {
+        { null, null, null, null, null },
+        { null, 'b', null, null, null },
+        { null, '*', 'b', null, null },
+        { null, 'b', null, null, null },
+        { null, null, null, null, null } };
+
+    checkWhatIsAtBoardSelf(b, arr_self);
+
+    Character[][] arr_enemy = {
+        { null, null, null, null, null },
+        { null, 'b', null, null, null },
+        { null, null, null, null, null },
+        { null, null, null, null, null },
+        { null, null, null, null, null } };
+
+    checkWhatIsAtBoardEnemy(b, arr_enemy);
+    b.fireAt(new Coordinate(0, 1));
+
+    arr_enemy[0][1]='X';
+    checkWhatIsAtBoardSelf(b, arr_self);
+    checkWhatIsAtBoardEnemy(b, arr_enemy);
+
+    Ship<Character> s3 = sf.makeBattleship(new Placement("D1R"));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", b.tryMoveShip(s1, s3));
+  }
+
+  
+  @Test
+  public void test_scanFor(){
+    BattleShipBoard<Character> b = new BattleShipBoard<Character>(5, 5, 'X');
+    V1ShipFactory sf = new V1ShipFactory();
+    Ship<Character> s1 = sf.makeCarrier(new Placement("A0U"));
+    b.tryAddShip(s1);
+     assertEquals(1,b.scanFor(new Coordinate(4,4),'c'));
+    assertEquals(0,b.scanFor(new Coordinate(4,4),'d'));
+    assertEquals(4,b.scanFor(new Coordinate(3,3),'c'));
+    assertEquals(6,b.scanFor(new Coordinate(2,2),'c'));
+  }
 }

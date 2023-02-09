@@ -14,6 +14,8 @@ final char orientation
 Coordinate getWhere()
 char getOrientation()
 void checkOrientation(char)
+void checkHVOrientation()
+void checkUDLROrientation()
 equals, hashCode, toString
 constructor: (String)(Coordinate where, char orientation) 
 
@@ -42,6 +44,19 @@ String getName
 Constructor:(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T>enemyDisplayInfo), (String name,Coordinate upperLeft, int width, int height, T data, T onHit), (Coordinate upperLeft, T data, T onHit) 
 static HashSet<Coordinate> makeCoords(Coordinate upperLeft, int width, int height)
 
+StairShip<T> extends BasicShip<T>
+private final String name;
+String getName()
+Constructor: (String name, Coordinate upperLeft, char orientation, ShipDisplayInfo<T> myDisplayInfo,
+      ShipDisplayInfo<T> enemyDisplayInfo) (String name, Coordinate upperLeft, char orientation, T data, T onHit)
+static HashSet<Coordinate> makeCoords(Coordinate upperLeft, char orientation) 
+static HashSet<Coordinate> makeUpCoords(Coordinate upperLeft)
+static HashSet<Coordinate> makeRightCoords(Coordinate upperLeft) 
+static HashSet<Coordinate> makeLeftCoords(Coordinate upperLeft)
+static HashSet<Coordinate> makeDownCoords(Coordinate upperLeft)
+
+TShip<T> extends BasicShip<T>
+Same as top
 
 interface ShipDisplayInfo<T>
 T getInfo(Coordinate where, boolean hit)
@@ -63,6 +78,8 @@ Ship<T> makeDestroyer(Placement where);
 
 class V1ShipFactory implements AbstractShipFactory<Character>
 protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name)
+protected Ship<Character> createTShip(Placement where, int w, int h, char letter, String name) 
+protected Ship<Character> createStairShip(Placement where, int w, int h, char letter, String name)
 //override function
 
 

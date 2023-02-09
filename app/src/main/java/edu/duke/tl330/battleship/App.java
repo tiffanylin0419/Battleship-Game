@@ -34,12 +34,12 @@ public class App {
         player1.out.println("Player " + player2.name + " win. Player " + player1.name + " lose.");
         return;
       }
-      player1.playOneTurn(player2);
+      player1.doOneAction(player2);
       if (player2.theBoard.noShips()) {
         player2.out.println("Player " + player1.name + " win. Player " + player2.name + " lose.");
         return;
       }
-      player2.playOneTurn(player1);
+      player2.doOneAction(player1);
     }
 
   }

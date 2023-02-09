@@ -1,5 +1,6 @@
 package edu.duke.tl330.battleship;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class TShip<T> extends BasicShip<T> {
@@ -12,7 +13,7 @@ public class TShip<T> extends BasicShip<T> {
   // constructor in class
   public TShip(String name, Coordinate upperLeft, char orientation, ShipDisplayInfo<T> myDisplayInfo,
       ShipDisplayInfo<T> enemyDisplayInfo) {
-    super(makeCoords(upperLeft, orientation), myDisplayInfo, enemyDisplayInfo);
+    super(makeCoords(upperLeft, orientation), makeOffset(upperLeft, orientation), myDisplayInfo, enemyDisplayInfo);
     this.name = name;
   }
 
@@ -23,61 +24,41 @@ public class TShip<T> extends BasicShip<T> {
 
   }
 
-  // return the coords where the ship occupies
-  static HashSet<Coordinate> makeCoords(Coordinate upperLeft, char orientation) {
+  static ArrayList<Coordinate> makeOffset(Coordinate upperLeft, char orientation) {
+    ArrayList<Coordinate> offset = new ArrayList<Coordinate>();
     if (orientation == 'U') {
-      return makeUpCoords(upperLeft);
+      offset.add(new Coordinate(0, 1));
+      offset.add(new Coordinate(1, 0));
+      offset.add(new Coordinate(1, 1));
+      offset.add(new Coordinate(1, 2));
     } else if (orientation == 'R') {
-      return makeRightCoords(upperLeft);
+      offset.add(new Coordinate(1, 1));
+      offset.add(new Coordinate(0, 0));
+      offset.add(new Coordinate(1, 0));
+      offset.add(new Coordinate(2, 0));
     } else if (orientation == 'D') {
-      return makeDownCoords(upperLeft);
+      offset.add(new Coordinate(1, 1));
+      offset.add(new Coordinate(0, 2));
+      offset.add(new Coordinate(0, 1));
+      offset.add(new Coordinate(0, 0));
     } else {// L
-      return makeLeftCoords(upperLeft);
+      offset.add(new Coordinate(1, 0));
+      offset.add(new Coordinate(2, 1));
+      offset.add(new Coordinate(1, 1));
+      offset.add(new Coordinate(0, 1));
     }
 
+    return offset;
   }
 
-  static HashSet<Coordinate> makeUpCoords(Coordinate upperLeft) {
-    HashSet<Coordinate> coords = new HashSet<Coordinate>();
+  // return the coords where the ship occupies
+  static HashSet<Coordinate> makeCoords(Coordinate upperLeft, char orientation) {
     int r = upperLeft.getRow();
     int c = upperLeft.getColumn();
-    coords.add(new Coordinate(r, c + 1));
-    coords.add(new Coordinate(r + 1, c));
-    coords.add(new Coordinate(r + 1, c + 1));
-    coords.add(new Coordinate(r + 1, c + 2));
-    return coords;
-  }
-
-  static HashSet<Coordinate> makeRightCoords(Coordinate upperLeft) {
     HashSet<Coordinate> coords = new HashSet<Coordinate>();
-    int r = upperLeft.getRow();
-    int c = upperLeft.getColumn();
-    coords.add(new Coordinate(r, c));
-    coords.add(new Coordinate(r + 1, c));
-    coords.add(new Coordinate(r + 1, c + 1));
-    coords.add(new Coordinate(r + 2, c));
-    return coords;
-  }
-
-  static HashSet<Coordinate> makeDownCoords(Coordinate upperLeft) {
-    HashSet<Coordinate> coords = new HashSet<Coordinate>();
-    int r = upperLeft.getRow();
-    int c = upperLeft.getColumn();
-    coords.add(new Coordinate(r, c));
-    coords.add(new Coordinate(r, c + 1));
-    coords.add(new Coordinate(r, c + 2));
-    coords.add(new Coordinate(r + 1, c + 1));
-    return coords;
-  }
-
-  static HashSet<Coordinate> makeLeftCoords(Coordinate upperLeft) {
-    HashSet<Coordinate> coords = new HashSet<Coordinate>();
-    int r = upperLeft.getRow();
-    int c = upperLeft.getColumn();
-    coords.add(new Coordinate(r, c + 1));
-    coords.add(new Coordinate(r + 1, c));
-    coords.add(new Coordinate(r + 1, c + 1));
-    coords.add(new Coordinate(r + 2, c + 1));
+    for (Coordinate of : TShip.makeOffset(upperLeft, orientation)) {
+      coords.add(new Coordinate(r + of.getRow(), c + of.getColumn()));
+    }
     return coords;
   }
 
