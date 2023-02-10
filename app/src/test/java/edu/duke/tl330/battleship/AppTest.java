@@ -13,8 +13,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -38,7 +39,7 @@ class AppTest {
     assertEquals('F', c);
   }
 
-  //add different actio
+  // add different actio
   @Test
   public void test_doAttackingPhase() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -74,15 +75,36 @@ class AppTest {
     assertEquals(expected, bytes.toString());
   }
 
-  @Disabled
   @Test
-  @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
-  public void test_main() throws IOException {
+  public void test_getAllPlacement() {
+    String expected="F\nA0\nF\nA1\nF\nA2\nF\nA3\nF\nA4\nF\nA5\nF\nA6\nF\nA7\nF\nA8\nF\nA9\n"
+      +"F\nB0\nF\nB1\nF\nB2\nF\nB3\nF\nB4\nF\nB5\nF\nB6\nF\nB7\nF\nB8\nF\nB9\n";
+    assertEquals(expected.substring(0,100),App.getAllPlacement().substring(0,100));
+  }
+
+  @Test
+  public void test_makePlayer() throws IOException{
+    BufferedReader input = new BufferedReader(new StringReader("j\nY\nN\n"));
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes, true);
-    InputStream input = getClass().getClassLoader().getResourceAsStream("input.txt");
+    TextPlayer p1=App.makePlayer("A",new BattleShipBoard<Character>(5, 6, 'X'),input,out,new V1ShipFactory());
+
+    TextPlayer p2=App.makePlayer("B",new BattleShipBoard<Character>(5, 6, 'X'),input,out,new V1ShipFactory());
+
+    String expected ="Is player A computer? (Y for yes, N for no)\nInput needs to be Y or N.\nIs player B computer? (Y for yes, N for no)\n";
+    assertEquals(expected,bytes.toString());
+
+    
+
+  }
+
+  
+  public void test_main_helper(String inFile,String outFile) throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes, true);
+    InputStream input = getClass().getClassLoader().getResourceAsStream(inFile);
     assertNotNull(input);
-    InputStream expectedStream = getClass().getClassLoader().getResourceAsStream("output.txt");
+    InputStream expectedStream = getClass().getClassLoader().getResourceAsStream(outFile);
     assertNotNull(expectedStream);
     InputStream oldIn = System.in;
     PrintStream oldOut = System.out;
@@ -99,4 +121,15 @@ class AppTest {
     assertEquals(expected, actual);
   }
 
+  @Test
+  @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
+  public void test_main()throws IOException {
+    ArrayList<String> inFiles = new ArrayList<String>();
+    inFiles.addAll(Arrays.asList("input.txt","input0.txt","input1.txt"));
+    ArrayList<String> outFiles = new ArrayList<String>();
+    outFiles.addAll(Arrays.asList("output.txt","output0.txt","output1.txt"));
+    for(int i=0;i<inFiles.size();i++){
+      test_main_helper(inFiles.get(i),outFiles.get(i));
+    }
+  }
 }

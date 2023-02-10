@@ -63,4 +63,12 @@ public class CoordinateTest {
     assertThrows(IllegalArgumentException.class, () -> new Coordinate("A"));
     assertThrows(IllegalArgumentException.class, () -> new Coordinate("A12"));
     } 
+
+  @Test
+  public void test_toLetterString(){
+    String s="C3";
+    Coordinate c=new Coordinate(s);
+    assertEquals(s,c.toLetterString());
+  }
 }
+

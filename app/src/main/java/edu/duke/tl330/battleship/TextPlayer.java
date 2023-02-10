@@ -19,7 +19,14 @@ public class TextPlayer {
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
   final ActionCount action;
-  final boolean isHuman;
+  private boolean isHuman;
+
+  // constructor
+  public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
+      AbstractShipFactory<Character> shipFactory, boolean isHuman) {
+    this(name, theBoard, input, out, shipFactory);
+    this.isHuman = isHuman;
+  }
 
   // constructor
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out,
@@ -56,7 +63,9 @@ public class TextPlayer {
   // return placement
   public Placement readPlacement(String prompt) throws IOException {
     // out.println(prompt);
-    out.println(prompt);
+    if (isHuman) {
+      out.println(prompt);
+    }
     String s = inputReader.readLine();
     if (s == null) {
       throw new EOFException("No input.\n");
@@ -69,11 +78,25 @@ public class TextPlayer {
     if (s == null) {
       throw new EOFException("No input.\n");
     }
-    return new Coordinate(s);
+    Coordinate c = new Coordinate(s);
+    while (c.getColumn() < 0 || c.getColumn() >= theBoard.getWidth() || c.getRow() < 0
+        || c.getRow() >= theBoard.getHeight()) {
+      if (isHuman) {
+        out.println("Coordinate not in board, enter again.");
+      }
+      s = inputReader.readLine();
+      if (s == null) {
+        throw new EOFException("No input.\n");
+      }
+      c = new Coordinate(s);
+    }
+    return c;
   }
 
   public char readAction(String prompt) throws IOException {
-    out.print(prompt);
+    if (isHuman) {
+      out.print(prompt);
+    }
     String s = inputReader.readLine();
     if (s == null) {
       throw new EOFException("No input.\n");
@@ -109,7 +132,7 @@ public class TextPlayer {
         }
       } else {// 'S'
         if (action.canScan()) {
-          doScan();
+          doScan(enemy);
           action.doScan();
           return;
         } else {
@@ -129,11 +152,13 @@ public class TextPlayer {
     String error = theBoard.tryAddShip(s);
     while (error != null) {
       out.println(error);
+
       p = readPlacement("Player " + name + " where do you want to place a Destroyer?");
       Ship<Character> s1 = shipFactory.makeDestroyer(p);
       error = theBoard.tryAddShip(s1);
     }
     out.println(view.displayMyOwnBoard());
+
   }
 
   // called with
@@ -144,23 +169,27 @@ public class TextPlayer {
     Ship<Character> s = createFn.apply(p);
     String error = theBoard.tryAddShip(s);
     while (error != null) {
-      out.println(error);
+      if (isHuman) {
+        out.println(error);
+      }
       p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
       s = createFn.apply(p);
       error = theBoard.tryAddShip(s);
     }
-    out.print(view.displayMyOwnBoard());
-
+    if (isHuman) {
+      out.print(view.displayMyOwnBoard());
+    }
   }
 
   // print empty board
   // display game info and ask for input
   // display board with ship added
   public void doPlacementPhase() throws IOException {
-    this.out.println(this.view.displayMyOwnBoard());
-    this.out.println("Player " + name
-        + ": you are going to place the following ships (which are all\nrectangular). For each ship, type the coordinate of the upper left\nside of the ship, followed by either H (for horizontal) or V (for\nvertical).  For example M4H would place a ship horizontally starting\nat M4 and going to the right.  You have\n\n2 \"Submarines\" ships that are 1x2\n3 \"Destroyers\" that are 1x3\n3 \"Battleships\" that are 1x4\n2 \"Carriers\" that are 1x6");
-
+    if (isHuman) {
+      out.println(this.view.displayMyOwnBoard());
+      out.println("Player " + name
+          + ": you are going to place the following ships (which are all\nrectangular). For each ship, type the coordinate of the upper left\nside of the ship, followed by either H (for horizontal) or V (for\nvertical).  For example M4H would place a ship horizontally starting\nat M4 and going to the right.  You have\n\n2 \"Submarines\" ships that are 1x2\n3 \"Destroyers\" that are 1x3\n3 \"Battleships\" that are 1x4\n2 \"Carriers\" that are 1x6");
+    }
     for (String i : shipsToPlace) {
       doOnePlacement(i, shipCreationFns.get(i));
     }
@@ -168,41 +197,56 @@ public class TextPlayer {
 
   public void playOneTurn(TextPlayer enemy) throws IOException {
     // Board<Character> theBoardEnemy,BoardTextView viewEnemy, String nameEnemy){
-    out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, name, enemy.name));
+    if (isHuman) {
+      out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, name, enemy.name));
+    }
     Coordinate c = readCoordinate();
 
     Ship<Character> s = enemy.theBoard.fireAt(c);
+
     if (s != null) {
-      out.println("You hit a " + s.getName().toLowerCase() + "!");
+      if (isHuman) {
+        out.println("You hit a " + s.getName().toLowerCase() + "!");
+      } else {
+        out.println("Player " + name + " hit your " + s.getName() + " at " + c.toLetterString() + "!");
+      }
     } else {
-      out.println("You missed!");
+      if (isHuman) {
+        out.println("You missed!");
+      } else {
+        out.println("Player " + name + " missed!");
+      }
+
     }
   }
 
   public boolean doMove(TextPlayer enemy) throws IOException {
     Coordinate c = readCoordinate();
-
     Ship<Character> oldShip = theBoard.getShipAt(c);
     if (oldShip == null) {
       return false;
     }
-
     Placement p = readPlacement("");
     Ship<Character> newShip = shipCreationFns.get(oldShip.getName()).apply(p);
     if (theBoard.tryMoveShip(oldShip, newShip) != null) {
       return false;
     }
-
-    // out.print(view.displayMyBoardWithEnemyNextToIt(view, name, enemy.name));
+    if (!isHuman) {
+      out.println("Player " + name + " used a special action");
+    }
     return true;
   }
 
-  public void doScan() throws IOException {
+  public void doScan(TextPlayer enemy) throws IOException {
 
     Coordinate c = readCoordinate();
-    out.println("Submarines occupy " + theBoard.scanFor(c, 's') + " squares");
-    out.println("Destroyers occupy " + theBoard.scanFor(c, 'd') + " squares");
-    out.println("Battleships occupy " + theBoard.scanFor(c, 'b') + " squares");
-    out.println("Carriers occupy " + theBoard.scanFor(c, 'c') + " squares");
+    if (isHuman) {
+      out.println("Submarines occupy " + enemy.theBoard.scanFor(c, 's') + " squares");
+      out.println("Destroyers occupy " + enemy.theBoard.scanFor(c, 'd') + " squares");
+      out.println("Battleships occupy " + enemy.theBoard.scanFor(c, 'b') + " squares");
+      out.println("Carriers occupy " + enemy.theBoard.scanFor(c, 'c') + " squares");
+    } else {
+      out.println("Player " + name + " used a special action");
+    }
   }
 }

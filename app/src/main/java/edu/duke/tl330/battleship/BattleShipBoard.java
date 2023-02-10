@@ -148,9 +148,9 @@ public class BattleShipBoard<T> implements Board<T> {
 
   protected T whatIsAt(Coordinate where, boolean isSelf) {
     if (isSelf == false) {
-      if (enemyDisguise.containsKey(where)) {
+      //if (enemyDisguise.containsKey(where)) {
         return enemyDisguise.get(where);
-      }
+        //}
     }
     for (Ship<T> s : myShips) {
       if (s.occupiesCoordinates(where)) {

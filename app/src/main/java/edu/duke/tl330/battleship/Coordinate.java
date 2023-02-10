@@ -38,6 +38,11 @@ public class Coordinate {
     return "(" + row + ", " + column + ")";
   }
 
+  public String toLetterString(){
+    char c=(char)( 'A'+row);
+    return Character.toString(c)+column;
+  }
+  
   // convert number character to int input'0'-'9' outpur 0-9
   private int charToInt(char c) {
     if (c < '0' || c > '9') {

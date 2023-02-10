@@ -43,27 +43,46 @@ public class App {
 
   }
 
+  static String getAllPlacement() {
+    String ans = "";
+    String fire = "F\n";
+    for (char c = 'A'; c < 'U'; c++) {
+      for (int i = 0; i < 10; i++) {
+        ans = ans + fire + c + i + "\n";
+      }
+    }
+    return ans;
+  }
+
+  static TextPlayer makePlayer(String name, Board<Character> b, BufferedReader input, PrintStream out,
+      V1ShipFactory factory)
+      throws IOException {
+    BufferedReader input_computer = new BufferedReader(new StringReader("a0h\na2h\na4h\na7h\nb0h\nb3d\nb6d\nc0d\nC3U\nc5u\n" + getAllPlacement()));
+    out.println("Is player "+name+" computer? (Y for yes, N for no)");
+    String s1 = input.readLine();
+    // toUpperCase
+    while (!(s1.equals("Y") || s1.equals("N"))) {
+      out.println("Input needs to be Y or N.");
+      s1 = input.readLine();
+    }
+    if (s1.equals("Y")) {
+      return new TextPlayer(name, b, input_computer, out, factory, false);
+    } else {
+      return new TextPlayer(name, b, input, out, factory);
+    }
+  }
+
   public static void main(String[] args) throws IOException {
 
     Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
     Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    BufferedReader input1 = new BufferedReader(new StringReader("" + getAllPlacement()));
+    BufferedReader input2 = new BufferedReader(new StringReader("" + getAllPlacement()));
     V1ShipFactory factory = new V1ShipFactory();
-    System.out.println("Is player A computer? (Y for yes, N for no)");
-    String s1 = input.readLine();
-    while (!(s1.equals("Y") || s1.equals("N"))) {
-      System.out.println("Input needs to be Y or N.");
-      s1 = input.readLine();
-    }
-    System.out.println("Is player B computer? (Y for yes, N for no)");
-    String s2 = input.readLine();
-    while (!(s2.equals("Y") || s2.equals("N"))) {
-      System.out.println("Input needs to be Y or N.");
-      s2 = input.readLine();
-    }
-    
-    TextPlayer p1 = new TextPlayer("A", b1, input, System.out, factory);
-    TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
+    TextPlayer p1 = makePlayer("A", b1, input, System.out, factory);
+    TextPlayer p2 = makePlayer("B", b2, input, System.out, factory);
+
     App app = new App(p1, p2);
     app.doPlacementPhase();
     app.doAttackingPhase();
