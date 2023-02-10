@@ -64,7 +64,7 @@ public class TextPlayer {
   public Placement readPlacement(String prompt) throws IOException {
     // out.println(prompt);
     if (isHuman) {
-      out.println(prompt);
+      out.print(prompt);
     }
     String s = inputReader.readLine();
     if (s == null) {
@@ -145,7 +145,7 @@ public class TextPlayer {
   // read input
   // place one whip and print board
   public void doOnePlacement() throws IOException {
-    Placement p = readPlacement("Player " + name + " where do you want to place a Destroyer?");
+    Placement p = readPlacement("Player " + name + " where do you want to place a Destroyer?\n");
     // RectangleShip<Character> s = new RectangleShip<Character>(p.getWhere(), 's',
     // '*');
     Ship<Character> s = shipFactory.makeDestroyer(p);
@@ -153,7 +153,7 @@ public class TextPlayer {
     while (error != null) {
       out.println(error);
 
-      p = readPlacement("Player " + name + " where do you want to place a Destroyer?");
+      p = readPlacement("Player " + name + " where do you want to place a Destroyer?\n");
       Ship<Character> s1 = shipFactory.makeDestroyer(p);
       error = theBoard.tryAddShip(s1);
     }
@@ -165,14 +165,14 @@ public class TextPlayer {
   // doOnePlacement("Submarine", (p)->shipFactory.makeSubmarine(p));
   public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
     Placement p = readPlacement("Player " + name +
-        " where do you want to place a " + shipName + "?");
+        " where do you want to place a " + shipName + "?\n");
     Ship<Character> s = createFn.apply(p);
     String error = theBoard.tryAddShip(s);
     while (error != null) {
       if (isHuman) {
         out.println(error);
       }
-      p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
+      p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?\n");
       s = createFn.apply(p);
       error = theBoard.tryAddShip(s);
     }

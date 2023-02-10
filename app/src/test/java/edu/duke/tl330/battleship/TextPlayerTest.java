@@ -58,7 +58,7 @@ public class TextPlayerTest {
     for (int i = 0; i < expected.length; i++) {
       Placement p = player.readPlacement(prompt);
       assertEquals(p, expected[i]); // did we get the right Placement back
-      assertEquals(prompt + "\n", bytes.toString()); // should have printed prompt and newline
+      assertEquals(prompt , bytes.toString()); // should have printed prompt and newline
       bytes.reset(); // clear out bytes for next time around
 
       p = computer.readPlacement(prompt);
@@ -166,9 +166,7 @@ public class TextPlayerTest {
         "D  | | |c|c D\n" +
         "E  | | | |c E\n" +
         expectedHeader + "\n" +
-        "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (2 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n"
-        +
-        "\n\n" +
+        "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (2 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n" +
         "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (1 remaining)\n S Sonar scan (1 remaining)\n\nPlayer A, what would you like to do?\n"
         +
         "Submarines occupy 0 squares\nDestroyers occupy 0 squares\nBattleships occupy 0 squares\nCarriers occupy 0 squares\n"
@@ -176,7 +174,6 @@ public class TextPlayerTest {
         "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (1 remaining)\n S Sonar scan (0 remaining)\n\nPlayer A, what would you like to do?\n"
         +
         "No more scans.\n" +
-        "\n" +
         "Possible actions for Player A:\n\n F Fire at a square\n M Move a ship to another square (0 remaining)\n S Sonar scan (0 remaining)\n\nPlayer A, what would you like to do?\n"
         +
         "No more moves.\n" +

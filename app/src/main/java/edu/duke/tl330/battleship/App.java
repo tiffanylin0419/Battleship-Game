@@ -61,11 +61,11 @@ public class App {
     out.println("Is player "+name+" computer? (Y for yes, N for no)");
     String s1 = input.readLine();
     // toUpperCase
-    while (!(s1.equals("Y") || s1.equals("N"))) {
+    while (!(s1.equals("Y") || s1.equals("N")||s1.equals("y") || s1.equals("n"))) {
       out.println("Input needs to be Y or N.");
       s1 = input.readLine();
     }
-    if (s1.equals("Y")) {
+    if (s1.equals("Y")||s1.equals("y")) {
       return new TextPlayer(name, b, input_computer, out, factory, false);
     } else {
       return new TextPlayer(name, b, input, out, factory);

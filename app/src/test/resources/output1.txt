@@ -565,7 +565,6 @@ Possible actions for Player B:
  S Sonar scan (1 remaining)
 
 Player B, what would you like to do?
-
 Possible actions for Player A:
 
  F Fire at a square
@@ -755,7 +754,6 @@ Possible actions for Player B:
  S Sonar scan (0 remaining)
 
 Player B, what would you like to do?
-
 Possible actions for Player A:
 
  F Fire at a square
@@ -891,7 +889,6 @@ Possible actions for Player A:
  S Sonar scan (0 remaining)
 
 Player A, what would you like to do?
-
 Possible actions for Player B:
 
  F Fire at a square
