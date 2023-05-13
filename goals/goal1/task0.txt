@@ -1,0 +1,36 @@
+
+Goal 1: Minimal end to end system
+---------------------------------
+//Task 0. Project Setup
+  You should already have your development environment setup from the previous tutorial.
+  We need to make a new gitlab project and create the build.gradle.
+  Go to Duke's gitlab, create a new project named
+    ece651-spYEAR-YOURNETID-battleship
+  [replace YEAR with 2 digits for the current year]
+  [replace YOURNETID with your netid]
+  Now clone that project to your computer.
+  cd into that directory (cd ece651-spYEAR-YOURNETID-battleship)
+  and do
+  gradle init.
+
+Do the gradle setup as you did in the dev-setup walkthrough, except
+specify the project name and default source package
+
+Project name (default: src): battleship
+Source package (default: battleship): edu.duke.YOURNETID.battleship
+
+Copy in the top-level build.gradle, and edit app/build.gradle as in
+the dev-setup walkthrough.
+
+
+
+
+Before you proceed, run
+
+./gradlew  dependencies
+
+We aren't so much interested in the output, but it will make sure your build.gradle file
+is valid, and check the dependency structure.  This mostly will help you identify any problems
+before you proceed.
+
+
